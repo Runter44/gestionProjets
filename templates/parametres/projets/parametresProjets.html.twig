@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets{% endblock %}
+
+{% block body %}
+<h1>Projets</h1>
+<a class="btn btn-outline-success mb-4 mt-2" href="{{ path('nouveauProjet') }}"><i class="fa fa-plus"></i> Nouveau projet</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nom du projet</th>
+      <th>Avancement</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% set i = 1 %}
+    {% for projet in projets %}
+    {% set avancement = random(100) %}
+    {% if avancement == 100 %}
+    {% set bg = "bg-success" %}
+    {% elseif avancement >= 66 %}
+    {% set bg = "bg-info" %}
+    {% elseif avancement >= 33 %}
+    {% set bg = "bg-warning" %}
+    {% else %}
+    {% set bg = "bg-danger" %}
+    {% endif %}
+    <tr>
+      <td class="align-middle">{{ i }}</td>
+      <td class="align-middle">{{ projet.name }}</td>
+      <td class="align-middle">
+        <div class="progress" style="height: 38px">
+          <div class="progress-bar progress-bar-striped {{ bg }}" role="progressbar" style="width: {{ avancement }}%; font-size:20px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
+        </div>
+      </td>
+      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierProjet', {'name':projet.name|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a onclick="confirmSupprProjet({{ projet.id }})" class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+    </tr>
+    {% set i = i + 1 %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  function confirmSupprProjet(id) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce projet ?")) {
+      document.location = '/parametres/projets/supprimer/'+id+'/';
+    }
+  }
+</script>
+{% endblock %}

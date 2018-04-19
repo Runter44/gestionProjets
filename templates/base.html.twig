@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>{% block title %}{% endblock %} - Gestion des projets UmanIT</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
+  {% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/fontawesome-all.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+  {% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <!-- <div class="navbar-header">
+      </div> -->
+      <a href="{{ path('accueil') }}" class="navbar-brand"><i class="fa fa-tasks"></i> Gestion des projets UmanIT</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Menu de navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse ml-4" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ path('accueil') }}"><i class="fa fa-home"></i> Accueil</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i> Paramètres</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{ path('parametresProjets') }}">Projets</a>
+              <a class="dropdown-item" href="{{ path('parametresTypes') }}">Types de projets</a>
+              <a class="dropdown-item" href="{{ path('parametresTaches') }}">Tâches et catégories</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container pt-5">
+    {% block body %}{% endblock %}
+  </div>
+  {% block javascripts %}
+  {% endblock %}
+  <script src="{{ asset('js/jquery.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.js') }}"></script>
+  <script src="{{ asset('js/main.js') }}"></script>
+</body>
+</html>

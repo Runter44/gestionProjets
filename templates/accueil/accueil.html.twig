@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="centered-div">
+  <img src="{{ asset('images/logo-umanit.png') }}" alt="UmanIT">
+  <h1 class="mb-5">Gestion des projets</h1><br>
+  <form class="form-inline mt-5" id="formVoirAvancement" style="display:block" action="{{ path('accueil') }}" method="post">
+    <h2>Vérifier l'avancement d'un projet</h2>
+    <select class="custom-select mr-2" name="projet" required id="projetVoir">
+      <option selected value="aucun">Sélectionnez un projet...</option>
+      {% for proj in projets %}
+        <option value="{{ proj.id }}">{{ proj.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" name="voirAvancement" class="btn btn-outline-dark" value="Valider">
+    <div class="invalid-feedback" style="margin-left: -45px;">Vous n'avez sélectionné aucun projet</div>
+  </form>
+</div>
+{% endblock %}

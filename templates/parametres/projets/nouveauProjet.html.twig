@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau projet{% endblock %}
+
+{% block body %}
+<h1 class="mb-5">Créer un nouveau projet</h1>
+<form class="" action="{{ path('saveNouveauProjet') }}" method="post" id="formNouveauProj">
+  <div class="form-group row">
+    <label for="nomProjet" class="col-sm-2 col-form-label">Nom du projet</label>
+    <input type="text" class="col-sm-10 form-control" name="nomProjet" placeholder="Nom" maxlength="100" required>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Tâches du projet</label>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="nouvelleListe" name="liste" value="new" checked>
+        <label class="form-check-label" for="nouvelleListe">Nouvelle liste de tâches</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="importerListe" name="liste" value="import">
+        <label class="form-check-label" for="importerListe">Importer à partir d'un type de projet</label>
+      </div>
+      <select class="custom-select mt-3" name="projetImport" id="projetImport" style="display:none;">
+        <option value="aucun" selected>Sélectionnez le type de projet à importer</option>
+        <option value="1">Projet web</option>
+        <option value="2">Projet akkalia</option>
+        <option value="3">Un autre type</option>
+      </select>
+      <div class="invalid-feedback" id="invalidProjet" style="font-size: 16px;">Vous n'avez sélectionné aucun projet</div>
+      <button id="genererListe" class="btn btn-dark mt-3" type="button" name="button">Créer la liste de tâches</button>
+    </div>
+  </div>
+  <h3 id="typeDeListe" class="mt-5"></h3>
+  <div id="formAjoutTache" style="display:none;" class="form-inline">
+    <select class="custom-select" id="selectAjoutTache" name="tacheAjouter"> <!-- Le select devra être généré par le php -->
+      <option value="aucun" selected>Choisissez une tâche à ajouter...</option>
+      {% for categ in categories %}
+      <optgroup label="{{ categ.name }}">
+        {% for tache in taches %}
+        {% if tache.idCategorie == categ.id %}
+        <option value="{{ tache.name }}|{{ categ.name }}|{{ tache.id }}">{{ tache.name }}</option>
+        {% endif %}
+        {% endfor %}
+      </optgroup>
+      {% endfor %}
+    </select>
+    <button type="button" name="button" id="btnAjoutTache" class="btn btn-success ml-3"><i class="fa fa-plus"></i> Ajouter une tâche</button>
+  </div>
+  <div class="invalid-feedback" id="invalidTache" style="font-size: 16px;">Vous n'avez sélectionné aucune tâche</div>
+  <input type="hidden" name="tachesProjet" id="tachesProjet" value="">
+  <div class="mt-5" id="emplacementGenererListe"></div>
+  <input type="submit" class="btn btn-dark d-block m-auto" style="display:none;" id="boutonCreerProjet" value="Enregistrer">
+</form>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.onbeforeunload = function() {
+    if (!$("#emplacementGenererListe").is(":empty")) {
+      return "Les modifications que vous avez apporté ne seront pas enregistrées.";
+    } else {
+      return null;
+    }
+  }
+</script>
+{% endblock %}

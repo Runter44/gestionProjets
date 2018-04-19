@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=Gaegu|Lato');
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.centered-div {
+  display: block;
+  margin: auto;
+  margin-top: 180px;
+  /*height: 392px;
+  width: 456px;*/
+  text-align: center;
+}
+
+.centered-div h1 {
+  font-family: 'Gaegu', cursive;
+}
+
+.bordureRouge {
+  border-color: #dc3545;
+}
+
+.btnSupprimerTache {
+  cursor: pointer;
+  margin-left: 40px;
+}
+
+.btnSupprimerTache:hover {
+  color: #dc3545;
+}
+
+.iconeSupprimer {
+  cursor: pointer;
+}
+
+.iconeSupprimer:hover {
+  color: #dc3545;
+}

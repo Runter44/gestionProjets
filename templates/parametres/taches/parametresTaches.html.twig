@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des tâches et catégories{% endblock %}
+
+{% block body %}
+<h1 class="mb-5">Tâches et catégories</h1>
+<div class="row">
+  <div class="col">
+    <h2>Ajouter ou supprimer des catégories</h2>
+    <form class="form-inline mb-5" action="{{ path('nouvelleCategorie') }}" method="post">
+      <input type="text" class="form-control col-sm-8 mr-3" name="nomCategorie" placeholder="Nom de la catégorie" maxlength="100">
+      <button type="button" class="btn btn-success ml-4 col-sm-3" onclick="this.parentElement.submit()" role="submit" name="button"><i class="fa fa-plus"></i> Ajouter</button>
+    </form>
+    <ul class="list-group">
+      {% for categ in categories %}
+      <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprCateg({{ categ.id }})"></i> {{ categ.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col">
+    <h2>Ajouter ou supprimer des tâches</h2>
+    <form class="form-inline mb-5" action="{{ path('nouvelleTache') }}" method="post">
+      <input type="text" class="form-control col-sm-4 mr-3" name="nomTache" placeholder="Nom de la tâche" maxlength="100">
+      <select class="custom-select col-sm-4" name="categorieTache">
+        {% for categ in categories %}
+        <option value="{{ categ.id }}">{{ categ.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn btn-success ml-3 col-sm-3" onclick="this.parentElement.submit()" role="submit" name="button"><i class="fa fa-plus"></i> Ajouter</button>
+    </form>
+    {% for categ in categories %}
+        <h4>{{ categ.name }}</h4>
+        <ul class="list-group mb-4">
+          {% for tache in taches %}
+            {% if tache.idCategorie == categ.id %}
+            <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }})"></i> {{ tache.name }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+function confirmSupprCateg(id) {
+  if (confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ? Les tâches rattachées à celle-ci seront supprimées aussi.")) {
+    document.location = '/parametres/taches/supprimer-categorie/'+id+'/';
+  }
+}
+
+function confirmSupprTache(id) {
+  if (confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
+    document.location = '/parametres/taches/supprimer-tache/'+id+'/';
+  }
+}
+</script>
+{% endblock %}
