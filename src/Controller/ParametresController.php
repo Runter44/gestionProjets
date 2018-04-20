@@ -47,14 +47,21 @@ class ParametresController extends Controller
         if (isset($_POST["nomProjet"])) {
           $entityManager = $this->getDoctrine()->getManager();
 
-          $projet = new Projet();
-          $projet->setName($_POST["nomProjet"]);
+          $projetTest = $this->getDoctrine()->getRepository(Projet::class)->findOneBy(
+            ['name' => $_POST["nomProjet"]]
+          );
 
-          $entityManager->persist($projet);
+          if ($projetTest == null) {
+            $projet = new Projet();
+            $projet->setName($_POST["nomProjet"]);
 
-          $entityManager->flush();
+            $entityManager->persist($projet);
+
+            $entityManager->flush();
+          } else {
+            return $this->redirect("/parametres/projets/");
+          }
         }
-
         return $this->redirect("/parametres/projets/");
     }
 
