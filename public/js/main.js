@@ -4,17 +4,18 @@ $(document).ready(function() {
     // ACCUEIL
 
     // Si aucun projet n'est sélectionné dans l'écran d'accueil
-    $("#formVoirAvancement").submit(function(event) {
+    $("#formVoirAvancement").click(function(event) {
         if ($("#projetVoir").val() === "aucun") {
             $(".invalid-feedback").show();
-            $("#projetVoir").addClass("bordureRouge");
-            event.preventDefault();
+            $("#projetVoir").addClass("is-invalid");
+        } else {
+            document.location = "/avancement/"+$("#projetVoir").val();
         }
     });
 
     $("#projetVoir").change(function() {
         $(".invalid-feedback").hide();
-        $("#projetVoir").removeClass("bordureRouge");
+        $("#projetVoir").removeClass("is-invalid");
     });
 
 
@@ -27,7 +28,7 @@ $(document).ready(function() {
             $("#projetImport").show();
         } else {
             $("#projetImport").hide();
-            $("#projetImport").removeClass("bordureRouge");
+            $("#projetImport").removeClass("is-invalid");
             $("#invalidProjet").hide();
         }
     });
@@ -38,7 +39,7 @@ $(document).ready(function() {
         if ($("input[name=liste]:checked").val() === "import") {
             if ($("#projetImport").val() === "aucun") {
                 $("#invalidProjet").show();
-                $("#projetImport").addClass("bordureRouge");
+                $("#projetImport").addClass("is-invalid");
                 $("#boutonCreerProjet").removeClass("d-block");
                 event.preventDefault();
                 return;
@@ -57,14 +58,14 @@ $(document).ready(function() {
 
     $("#projetImport").change(function() {
         $("#invalidProjet").hide();
-        $("#projetImport").removeClass("bordureRouge");
+        $("#projetImport").removeClass("is-invalid");
     });
 
     // Quand on ajoute une nouvelle tâche
     $("#btnAjoutTache").click(function() {
         if ($("#selectAjoutTache").val() === "aucun") {
             $("#invalidTache").show();
-            $("#selectAjoutTache").addClass("bordureRouge");
+            $("#selectAjoutTache").addClass("is-invalid");
         } else {
             ajoutTacheProjet($("#selectAjoutTache").val());
             $("#invalidAucuneTache").hide();
@@ -73,7 +74,7 @@ $(document).ready(function() {
 
     $("#selectAjoutTache").change(function() {
         $("#invalidTache").hide();
-        $("#selectAjoutTache").removeClass("bordureRouge");
+        $("#selectAjoutTache").removeClass("is-invalid");
     });
 
     $("#formNouveauProj").submit(function(event) {
@@ -92,7 +93,7 @@ $(document).ready(function() {
                 success: function(data) {
                     if (data !== "") {
                       $("#invalidNomUtilise").show();
-                      $("#nomProjet").addClass("bordureRouge");
+                      $("#nomProjet").addClass("is-invalid");
                     } else {
                       this.submit();
                     }
@@ -103,8 +104,17 @@ $(document).ready(function() {
 
     $("#nomProjet").change(function() {
       $("#invalidNomUtilise").hide();
-      $("#nomProjet").removeClass("bordureRouge");
+      $("#nomProjet").removeClass("is-invalid");
     });
+
+
+    // VOIR L'AVANCEMENT
+    $(".ulVoirAvancement").each(function() {
+      // On supprime tous les ul vides
+      if ($(this).has("li").length === 0) {
+        $(this).remove();
+      }
+    })
 });
 
 // FONCTIONS GLOBALES

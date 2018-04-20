@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Projet;
 use App\Entity\Categorie;
 use App\Entity\Tache;
+use App\Entity\TacheProjet;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -19,9 +20,11 @@ class ParametresController extends Controller
     public function projets()
     {
         $projets = $this->getDoctrine()->getRepository(Projet::class)->findAll();
+        $tachesProjets = $this->getDoctrine()->getRepository(TacheProjet::class)->findAll();
 
         return $this->render('parametres/projets/parametresProjets.html.twig', [
             'projets' => $projets,
+            'tachesProjets' => $tachesProjets,
         ]);
     }
 
@@ -56,8 +59,21 @@ class ParametresController extends Controller
             $projet->setName($_POST["nomProjet"]);
 
             $entityManager->persist($projet);
-
             $entityManager->flush();
+
+            $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
+
+            foreach ($taches as $tache) {
+                if (isset($_POST["tache".$tache->getId()])) {
+                    $tacheProjet = new TacheProjet();
+                    $tacheProjet->setIdTache($tache->getId());
+                    $tacheProjet->setIdProjet($projet->getId());
+                    $tacheProjet->setTermine(false);
+
+                    $entityManager->persist($tacheProjet);
+                    $entityManager->flush();
+                }
+            }
           } else {
             return $this->redirect("/parametres/projets/");
           }
@@ -82,7 +98,16 @@ class ParametresController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $projet = $this->getDoctrine()->getRepository(Projet::class)->find($id);
-        /*ajouter pour supprimer la tache supprimée des projets*/
+
+        $tachesProjet = $this->getDoctrine()->getRepository(TacheProjet::class)->findBy(
+          ['idProjet' => $id]
+        );
+
+        foreach ($tachesProjet as $tache) {
+          $entityManager->remove($tache);
+          $entityManager->flush();
+        }
+
         $entityManager->remove($projet);
         $entityManager->flush();
 
@@ -175,7 +200,16 @@ class ParametresController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $tache = $this->getDoctrine()->getRepository(Tache::class)->find($id);
-        /*ajouter pour supprimer la tache supprimée des projets*/
+
+        $tacheProjets = $this->getDoctrine()->getRepository(TacheProjet::class)->findBy(
+          ['idTache' => $id]
+        );
+
+        foreach ($tacheProjets as $tacheProj) {
+          $entityManager->remove($tacheProj);
+          $entityManager->flush();
+        }
+
         $entityManager->remove($tache);
         $entityManager->flush();
         return $this->redirect("/parametres/taches/");

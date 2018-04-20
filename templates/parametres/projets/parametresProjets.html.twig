@@ -17,7 +17,17 @@
   <tbody>
     {% set i = 1 %}
     {% for projet in projets %}
-    {% set avancement = random(100) %}
+    {% set total = 0 %}
+    {% set current = 0 %} <!-- Calcul de l'avancement de chaque projet -->
+      {% for tacheProj in tachesProjets %}
+        {% if projet.id == tacheProj.idProjet %}
+          {% set total = total + 1 %}
+          {% if tacheProj.termine == 1 %}
+            {% set current = current + 1 %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% set avancement = ((current / total)*100)|round %}
     {% if avancement == 100 %}
     {% set bg = "bg-success" %}
     {% elseif avancement >= 66 %}
@@ -35,7 +45,7 @@
           <div class="progress-bar progress-bar-striped {{ bg }}" role="progressbar" style="width: {{ avancement }}%; font-size:20px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
         </div>
       </td>
-      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierProjet', {'name':projet.name|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a onclick="confirmSupprProjet({{ projet.id }})" class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierProjet', {'name':projet.name|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a onclick="confirmSupprProjet({{ projet.id }}, '{{ projet.name }}')" class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
     </tr>
     {% set i = i + 1 %}
     {% endfor %}
@@ -45,8 +55,8 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  function confirmSupprProjet(id) {
-    if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce projet ?")) {
+  function confirmSupprProjet(id, nom) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer définitivement le projet " + nom + " ?")) {
       document.location = '/parametres/projets/supprimer/'+id+'/';
     }
   }

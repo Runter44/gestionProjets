@@ -37,3 +37,11 @@ body {
 .iconeSupprimer:hover {
   color: #dc3545;
 }
+
+.checkboxCouleur {
+  background-color: #dc3545;
+}
+
+.checkboxCouleur:checked {
+
+}

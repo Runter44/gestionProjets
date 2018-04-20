@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir l'avancement de {{ projet.name }}{% endblock %}
+
+{% block body %}
+
+{% set total = 0 %}
+{% set current = 0 %} <!-- Calcul de l'avancement de chaque projet -->
+{% for tacheProj in tachesProjet %}
+{% if projet.id == tacheProj.idProjet %}
+{% set total = total + 1 %}
+{% if tacheProj.termine == 1 %}
+{% set current = current + 1 %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% set avancementTotal = ((current / total)*100)|round %}
+
+  <h1 class="mb-5">Avancement du projet {{ projet.name }}</h1>
+
+  <div class="progress mb-5" style="height: 38px">
+    <div class="progress-bar progress-bar-striped {% if avancementTotal == 100 %}bg-success{% elseif avancementTotal >= 66 %}bg-info{% elseif avancementTotal >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancementTotal }}%; font-size:20px;" aria-valuenow="{{ avancementTotal }}" aria-valuemin="0" aria-valuemax="100">{{ avancementTotal }}%</div>
+  </div>
+
+  <form class="was-validated">
+  {% for categ in categories %}
+    {% set totalc = 0 %}
+    {% set currentc = 0 %}
+    {% for tch in tachesProjet %}
+      {% for tche in taches %}
+        {% if (tch.idTache == tche.id) and (tche.idCategorie == categ.id) %}
+          {% set totalc = totalc + 1 %}
+          {% if tch.termine == 1 %}
+            {% set currentc = currentc + 1 %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    {% set avancement = ((currentc / totalc)*100)|round %}
+    <ul class="list-group list-group-flush mb-5 ulVoirAvancement">
+      <h4 style="display: inline-block;">{{ categ.name }}
+      <div class="progress" style="height: 20px;width: 200px;display:inline-block;">
+        <div class="progress-bar progress-bar-striped {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:18px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
+      </div></h4>
+      {% for tache in taches %}
+        {% for tacheProj in tachesProjet %}
+          {% if (tache.id == tacheProj.idTache) and (tache.idCategorie == categ.id) %}
+            <li class="list-group-item">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" {% if tacheProj.termine == 1 %}checked{% endif %} class="custom-control-input" id="tache{{ tacheProj.idTache }}">
+                <label class="custom-control-label" for="tache{{ tacheProj.idTache }}">{{ tache.name }}</label>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endfor %}
+  <input type="submit" class="btn btn-dark d-block m-auto" value="Sauvegarder l'avancement">
+</form>
+{% endblock %}

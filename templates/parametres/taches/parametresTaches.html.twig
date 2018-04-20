@@ -13,7 +13,7 @@
     </form>
     <ul class="list-group">
       {% for categ in categories %}
-      <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprCateg({{ categ.id }})"></i> {{ categ.name }}</li>
+      <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprCateg({{ categ.id }}, '{{ categ.name }}')"></i> {{ categ.name }}</li>
       {% endfor %}
     </ul>
   </div>
@@ -33,7 +33,7 @@
         <ul class="list-group mb-4">
           {% for tache in taches %}
             {% if tache.idCategorie == categ.id %}
-            <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }})"></i> {{ tache.name }}</li>
+            <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }}, '{{ tache.name }}')"></i> {{ tache.name }}</li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -44,14 +44,14 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-function confirmSupprCateg(id) {
-  if (confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ? Les tâches rattachées à celle-ci seront supprimées aussi.")) {
+function confirmSupprCateg(id, nom) {
+  if (confirm("Êtes-vous sûr de vouloir supprimer la catégorie " + nom + " ? Les tâches rattachées à celle-ci seront supprimées aussi.")) {
     document.location = '/parametres/taches/supprimer-categorie/'+id+'/';
   }
 }
 
-function confirmSupprTache(id) {
-  if (confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
+function confirmSupprTache(id, nom) {
+  if (confirm("Êtes-vous sûr de vouloir supprimer la tâche " + nom + " ?")) {
     document.location = '/parametres/taches/supprimer-tache/'+id+'/';
   }
 }
