@@ -80,7 +80,7 @@ $(document).ready(function() {
     $("#formNouveauProj").submit(function(event) {
         window.onbeforeunload = null;
         event.preventDefault();
-        if ($("#nomProjet").val() === "" ||  $("#nbTachesProjet").val() === "0") {
+        if ($("#projet_name").val() === "" ||  $("#nbTachesProjet").val() === "0") {
             $("#invalidAucuneTache").show();
         } else {
             $.ajax({
@@ -88,12 +88,12 @@ $(document).ready(function() {
                 url: '/ajax/nom-projet-existe/',
                 type: "POST",
                 data: {
-                    "nomProjet": $("#nomProjet").val()
+                    "nomProjet": $("#projet_name").val()
                 },
                 success: function(data) {
                     if (data !== "") {
                       $("#invalidNomUtilise").show();
-                      $("#nomProjet").addClass("is-invalid");
+                      $("#projet_name").addClass("is-invalid");
                     } else {
                       this.submit();
                     }
@@ -102,9 +102,9 @@ $(document).ready(function() {
         }
     });
 
-    $("#nomProjet").change(function() {
+    $("#projet_name").change(function() {
       $("#invalidNomUtilise").hide();
-      $("#nomProjet").removeClass("is-invalid");
+      $("#projet_name").removeClass("is-invalid");
     });
 
 
@@ -138,7 +138,7 @@ function ajoutTacheProjet(tacheValue) {
             });
             var numero = $("#nbTachesProjet").val();
             // On ajoute l'icône et le nom de la tâche
-            $("#" + normalizeCategorie).append("<p><i id=\"btnSupprimerTache" + id + "\" class=\"far fa-trash-alt btnSupprimerTache\"></i> " + tache + "</p>");
+            $("#" + normalizeCategorie).append("<p class=\"texteTacheProjet\"><i id=\"btnSupprimerTache" + id + "\" class=\"far fa-trash-alt btnSupprimerTache mr-3\"></i> " + tache + "</p>");
             // On ajoute le input hidden pour l'ajout des taches
             $("#" + normalizeCategorie).append("<input type=\"hidden\" name=\"tache" + id + "\" id=\"tache" + id + "\" value=\"" + id + "\">");
             // Set le onclick pour supprimer
@@ -169,7 +169,7 @@ function ajoutTacheProjet(tacheValue) {
             });
             var numero = $("#nbTachesProjet").val();
             // On ajoute l'icône et le nom de la tâche
-            $("#" + normalizeCategorie).append("<p><i id=\"btnSupprimerTache" + id + "\" class=\"far fa-trash-alt btnSupprimerTache\"></i> " + tache + "</p>");
+            $("#" + normalizeCategorie).append("<p class=\"texteTacheProjet\"><i id=\"btnSupprimerTache" + id + "\" class=\"far fa-trash-alt btnSupprimerTache mr-3\"></i> " + tache + "</p>");
             // On ajoute le input hidden pour l'ajout des taches
             $("#" + normalizeCategorie).append("<input type=\"hidden\" name=\"tache" + id + "\" id=\"tache" + id + "\" value=\"" + id + "\">");
             // Set le onclick pour supprimer

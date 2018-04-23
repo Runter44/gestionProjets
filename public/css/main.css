@@ -45,3 +45,7 @@ body {
 .checkboxCouleur:checked {
 
 }
+
+.texteTacheProjet {
+  font-size: 18px;
+}

@@ -9,6 +9,7 @@ use App\Entity\TacheProjet;
 use App\Form\CategorieType;
 use App\Form\TacheType;
 use App\Form\ProjetType;
+use App\Utils\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,13 +36,44 @@ class ParametresController extends Controller
     /**
      * @Route("/parametres/projets/nouveau/", name="nouveauProjet")
      */
-    public function nouveauProjet()
+    public function nouveauProjet(Request $request, Slugger $slugger)
     {
         $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
         $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
 
         $projet = new Projet();
         $form = $this->createForm(ProjetType::class, $projet);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $projetTest = $this->getDoctrine()->getRepository(Projet::class)->findOneBy(
+              ['name' => $form->get("name")->getData()]
+            );
+
+            if ($projetTest == null && $_POST["nbTachesProjet"] > 0) {
+              foreach ($taches as $tache) {
+                if (isset($_POST["tache".$tache->getId()])) {
+                  $tacheProjet = new TacheProjet();
+                  $tacheProjet->setTache($tache);
+                  $tacheProjet->setProjet($projet);
+                  $tacheProjet->setTermine(false);
+
+                  $projet->addTacheProjet($tacheProjet);
+
+                  $entityManager->persist($tacheProjet);
+                }
+              }
+
+              $projet->setSlug($slugger->genererSlug($projet->getName()));
+
+              $entityManager->persist($projet);
+              $entityManager->flush();
+              return $this->redirectToRoute('parametresProjets');
+            }
+        }
 
         return $this->render('parametres/projets/nouveauProjet.html.twig', [
             'categories' => $categories,
@@ -51,51 +83,15 @@ class ParametresController extends Controller
     }
 
     /**
-     * @Route("/parametres/projets/nouveau/enregistrer/", name="saveNouveauProjet")
+     * @Route("/parametres/projets/modifier/{slug}/", name="modifierProjet")
      */
-    public function enregistrerNouveauProjet()
+    public function modifierProjet($slug)
     {
-        if (isset($_POST["nomProjet"])) {
-          $entityManager = $this->getDoctrine()->getManager();
-
-          $projetTest = $this->getDoctrine()->getRepository(Projet::class)->findOneBy(
-            ['name' => $_POST["nomProjet"]]
-          );
-
-          if ($projetTest == null) {
-            $projet = new Projet();
-            $projet->setName($_POST["nomProjet"]);
-
-            $entityManager->persist($projet);
-            $entityManager->flush();
-
-            $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
-
-            foreach ($taches as $tache) {
-                if (isset($_POST["tache".$tache->getId()])) {
-                    $tacheProjet = new TacheProjet();
-                    $tacheProjet->setIdTache($tache->getId());
-                    $tacheProjet->setIdProjet($projet->getId());
-                    $tacheProjet->setTermine(false);
-
-                    $entityManager->persist($tacheProjet);
-                    $entityManager->flush();
-                }
-            }
-          } else {
-            return $this->redirect("/parametres/projets/");
-          }
-        }
-        return $this->redirect("/parametres/projets/");
-    }
-
-    /**
-     * @Route("/parametres/projets/modifier/{name}/", name="modifierProjet")
-     */
-    public function modifierProjet($name)
-    {
+        $projet = $this->getDoctrine()->getRepository(Projet::class)->findOneBy([
+          'slug' => $slug,
+        ]);
         return $this->render('parametres/projets/modifierProjet.html.twig', [
-            'projet' => urldecode($name),
+            'projet' => $projet,
         ]);
     }
 
@@ -108,18 +104,17 @@ class ParametresController extends Controller
         $projet = $this->getDoctrine()->getRepository(Projet::class)->find($id);
 
         $tachesProjet = $this->getDoctrine()->getRepository(TacheProjet::class)->findBy(
-          ['idProjet' => $id]
+          ['projet' => $projet]
         );
 
         foreach ($tachesProjet as $tache) {
           $entityManager->remove($tache);
-          $entityManager->flush();
         }
 
         $entityManager->remove($projet);
         $entityManager->flush();
 
-        return $this->redirect("/parametres/projets/");
+        return $this->redirectToRoute("parametresProjets");
     }
 
 
