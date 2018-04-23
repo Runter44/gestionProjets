@@ -6,6 +6,10 @@ use App\Entity\Projet;
 use App\Entity\Categorie;
 use App\Entity\Tache;
 use App\Entity\TacheProjet;
+use App\Form\CategorieType;
+use App\Form\TacheType;
+use App\Form\ProjetType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -36,9 +40,13 @@ class ParametresController extends Controller
         $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
         $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
 
+        $projet = new Projet();
+        $form = $this->createForm(ProjetType::class, $projet);
+
         return $this->render('parametres/projets/nouveauProjet.html.twig', [
             'categories' => $categories,
             'taches' => $taches,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -163,34 +171,43 @@ class ParametresController extends Controller
     /**
      * @Route("/parametres/taches/", name="parametresTaches")
      */
-    public function taches()
+    public function taches(Request $request)
     {
-      $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
-      $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
+        $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
+
+        $categorie = new Categorie();
+        $tache = new Tache();
+
+        $formCategorie = $this->createForm(CategorieType::class, $categorie);
+        $formTache = $this->createForm(TacheType::class, $tache);
+
+        $formCategorie->handleRequest($request);
+
+        if ($formCategorie->isSubmitted() && $formCategorie->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($categorie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('parametresTaches');
+        }
+
+        $formTache->handleRequest($request);
+
+        if ($formTache->isSubmitted() && $formTache->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($tache);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('parametresTaches');
+        }
 
         return $this->render('parametres/taches/parametresTaches.html.twig', [
             'categories' => $categories,
             'taches' => $taches,
+            'formCategorie' => $formCategorie->createView(),
+            'formTache' => $formTache->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/parametres/taches/nouvelle-tache/", name="nouvelleTache")
-     */
-    public function nouvelleTache()
-    {
-        if (isset($_POST["nomTache"])) {
-          $entityManager = $this->getDoctrine()->getManager();
-
-          $tache = new Tache();
-          $tache->setName($_POST["nomTache"]);
-          $tache->setIdCategorie($_POST["categorieTache"]);
-
-          $entityManager->persist($tache);
-          $entityManager->flush();
-        }
-
-        return $this->redirect("/parametres/taches/");
     }
 
     /**
@@ -202,7 +219,7 @@ class ParametresController extends Controller
         $tache = $this->getDoctrine()->getRepository(Tache::class)->find($id);
 
         $tacheProjets = $this->getDoctrine()->getRepository(TacheProjet::class)->findBy(
-          ['idTache' => $id]
+          ['tache' => $tache]
         );
 
         foreach ($tacheProjets as $tacheProj) {
@@ -216,26 +233,6 @@ class ParametresController extends Controller
     }
 
     /**
-     * @Route("/parametres/taches/nouvelle-categorie/", name="nouvelleCategorie")
-     */
-    public function nouvelleCategorie()
-    {
-        if (isset($_POST["nomCategorie"])) {
-          $entityManager = $this->getDoctrine()->getManager();
-
-          $categorie = new Categorie();
-
-          $categorie->setName($_POST["nomCategorie"]);
-
-          $entityManager->persist($categorie);
-
-          $entityManager->flush();
-        }
-
-        return $this->redirect("/parametres/taches/");
-    }
-
-    /**
      * @Route("/parametres/taches/supprimer-categorie/{id}/", name="supprimerCategorie")
      */
     public function supprimerCategorie($id)
@@ -244,7 +241,7 @@ class ParametresController extends Controller
 
         $categorie = $this->getDoctrine()->getRepository(Categorie::class)->find($id);
         $tachesCategorie = $this->getDoctrine()->getRepository(Tache::class)->findBy(
-          ['idCategorie' => $id]
+          ['categorie' => $categorie]
         );
 
         foreach ($tachesCategorie as $tache) {

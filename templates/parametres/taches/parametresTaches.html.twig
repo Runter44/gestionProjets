@@ -7,10 +7,10 @@
 <div class="row">
   <div class="col">
     <h2>Ajouter ou supprimer des catégories</h2>
-    <form class="form-inline mb-5" action="{{ path('nouvelleCategorie') }}" method="post">
-      <input type="text" class="form-control col-sm-8 mr-3" name="nomCategorie" placeholder="Nom de la catégorie" maxlength="100">
-      <button type="button" class="btn btn-success ml-4 col-sm-3" onclick="this.parentElement.submit()" role="submit" name="button"><i class="fa fa-plus"></i> Ajouter</button>
-    </form>
+    {{ form_start(formCategorie, {'attr': {'class': 'form-inline mb-5'}} ) }}
+      {{ form_widget(formCategorie.name) }}
+      {{ form_widget(formCategorie.submit) }}
+    {{ form_end(formCategorie) }}
     <ul class="list-group">
       {% for categ in categories %}
       <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprCateg({{ categ.id }}, '{{ categ.name }}')"></i> {{ categ.name }}</li>
@@ -19,20 +19,16 @@
   </div>
   <div class="col">
     <h2>Ajouter ou supprimer des tâches</h2>
-    <form class="form-inline mb-5" action="{{ path('nouvelleTache') }}" method="post">
-      <input type="text" class="form-control col-sm-4 mr-3" name="nomTache" placeholder="Nom de la tâche" maxlength="100">
-      <select class="custom-select col-sm-4" name="categorieTache">
-        {% for categ in categories %}
-        <option value="{{ categ.id }}">{{ categ.name }}</option>
-        {% endfor %}
-      </select>
-      <button type="button" class="btn btn-success ml-3 col-sm-3" onclick="this.parentElement.submit()" role="submit" name="button"><i class="fa fa-plus"></i> Ajouter</button>
-    </form>
+    {{ form_start(formTache, {'attr': {'class': 'form-inline mb-5'}} ) }}
+      {{ form_widget(formTache.name) }}
+      {{ form_widget(formTache.categorie) }}
+      {{ form_widget(formTache.submit) }}
+    {{ form_end(formTache) }}
     {% for categ in categories %}
         <h4>{{ categ.name }}</h4>
         <ul class="list-group mb-4">
           {% for tache in taches %}
-            {% if tache.idCategorie == categ.id %}
+            {% if tache.categorie.id == categ.id %}
             <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }}, '{{ tache.name }}')"></i> {{ tache.name }}</li>
             {% endif %}
           {% endfor %}
