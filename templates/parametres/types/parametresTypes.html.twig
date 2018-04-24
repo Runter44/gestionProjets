@@ -4,7 +4,7 @@
 
 {% block body %}
 <h1>Types de projet</h1>
-<a class="btn btn-outline-success mb-4 mt-2" href="{{ path('nouveauType') }}"><i class="fa fa-plus"></i> Nouveau type de projet</a>
+<a class="btn btn-success mb-4 mt-2" href="{{ path('nouveauType') }}"><i class="fa fa-plus"></i> Nouveau type de projet</a>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -14,20 +14,29 @@
     </tr>
   </thead>
   <tbody>
+    {% set i = 1 %}
+    {% for type in types_projets %}
+      <tr>
+        <td class="align-middle">{{ i }}</td>
+        <td class="align-middle">{{ type.name }}</td>
+        <td class="align-middle text-right"><a class="btn btn-info" href="{{ path('modifierType', { 'name':type.slug }) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+      </tr>
+      {% set i = i + 1 %}
+    {% endfor %}
     <tr>
       <td class="align-middle">1</td>
       <td class="align-middle">Projet web</td>
-      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierType', {'name':"Projet web"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+      <td class="align-middle text-right"><a class="btn btn-info" href="{{ path('modifierType', {'name':"Projet web"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
     </tr>
     <tr>
       <td class="align-middle">2</td>
       <td class="align-middle">Projet akkalia</td>
-      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierType', {'name':"Projet akkalia"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+      <td class="align-middle text-right"><a class="btn btn-info" href="{{ path('modifierType', {'name':"Projet akkalia"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
     </tr>
     <tr>
       <td class="align-middle">3</td>
       <td class="align-middle">Un autre type</td>
-      <td class="align-middle text-right"><a class="btn btn-outline-info" href="{{ path('modifierType', {'name':"Un autre type"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
+      <td class="align-middle text-right"><a class="btn btn-info" href="{{ path('modifierType', {'name':"Un autre type"|url_encode}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>
     </tr>
   </tbody>
 </table>

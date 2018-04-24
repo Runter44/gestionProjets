@@ -6,10 +6,15 @@ use App\Entity\Projet;
 use App\Entity\Categorie;
 use App\Entity\Tache;
 use App\Entity\TacheProjet;
+use App\Entity\TypeTache;
+use App\Entity\TypeProjet;
 use App\Form\CategorieType;
 use App\Form\TacheType;
 use App\Form\ProjetType;
+use App\Form\TypeTacheType;
+use App\Form\TypeProjetType;
 use App\Utils\Slugger;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -47,32 +52,25 @@ class ParametresController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $projetTest = $this->getDoctrine()->getRepository(Projet::class)->findOneBy(
-              ['name' => $form->get("name")->getData()]
-            );
-
-            if ($projetTest == null && $_POST["nbTachesProjet"] > 0) {
-              foreach ($taches as $tache) {
-                if (isset($_POST["tache".$tache->getId()])) {
-                  $tacheProjet = new TacheProjet();
-                  $tacheProjet->setTache($tache);
-                  $tacheProjet->setProjet($projet);
-                  $tacheProjet->setTermine(false);
-
-                  $projet->addTacheProjet($tacheProjet);
-
-                  $entityManager->persist($tacheProjet);
-                }
+              $entityManager = $this->getDoctrine()->getManager();
+              $tempTaches = array();
+              foreach ($projet->getTacheProjets() as $tache) {
+                  $tache->setTermine(false);
+                  if (in_array($tache, $tempTaches)) {
+                    $projet->removeTacheProjet($tache);
+                  } else {
+                    array_push($tempTaches, $tache);
+                    $entityManager->persist($tache);
+                  }
               }
 
               $projet->setSlug($slugger->genererSlug($projet->getName()));
 
-              $entityManager->persist($projet);
-              $entityManager->flush();
+              if (count($projet->getTacheProjets()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
+                $entityManager->persist($projet);
+                $entityManager->flush();
+              }
               return $this->redirectToRoute('parametresProjets');
-            }
         }
 
         return $this->render('parametres/projets/nouveauProjet.html.twig', [
@@ -85,13 +83,61 @@ class ParametresController extends Controller
     /**
      * @Route("/parametres/projets/modifier/{slug}/", name="modifierProjet")
      */
-    public function modifierProjet($slug)
+    public function modifierProjet($slug, Request $request)
     {
         $projet = $this->getDoctrine()->getRepository(Projet::class)->findOneBy([
           'slug' => $slug,
         ]);
+
+        if ($projet == null) {
+            return $this->redirectToRoute('parametresProjets');
+        }
+
+        $originalTaches = new ArrayCollection();
+
+        foreach ($projet->getTacheProjets() as $tac) {
+            $originalTaches->add($tac);
+        }
+
+        $form = $this->createForm(ProjetType::class, $projet);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $tempTaches = array();
+
+            // on supprime les taches enlevées
+            foreach ($originalTaches as $tache) {
+                if ($projet->getTacheProjets()->contains($tache) == false) {
+                    $entityManager->remove($tache);
+                }
+            }
+
+            // on ajoute les taches ajoutées
+            foreach ($projet->getTacheProjets() as $projetTache) {
+                if ($originalTaches->contains($projetTache) == false) {
+                    $projetTache->setTermine(false);
+                    if (in_array($projetTache, $tempTaches)) {
+                      $projet->removeTacheProjet($projetTache);
+                    } else {
+                      array_push($tempTaches, $projetTache);
+                      $entityManager->persist($projetTache);
+                    }
+                }
+            }
+
+            if (count($projet->getTacheProjets()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
+              $entityManager->persist($projet);
+              $entityManager->flush();
+            }
+            return $this->redirectToRoute('parametresProjets');
+
+        }
+
         return $this->render('parametres/projets/modifierProjet.html.twig', [
             'projet' => $projet,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -131,17 +177,43 @@ class ParametresController extends Controller
     public function types()
     {
         return $this->render('parametres/types/parametresTypes.html.twig', [
-            'controller_name' => 'ParametresController',
+            'types_projets' => $this->getDoctrine()->getRepository(TypeProjet::class)->findAll(),
         ]);
     }
 
     /**
      * @Route("/parametres/types-projets/nouveau/", name="nouveauType")
      */
-    public function nouveauType()
+    public function nouveauType(Request $request, Slugger $slugger)
     {
+        $typeProjet = new TypeProjet();
+        $form = $this->createForm(TypeProjetType::class, $typeProjet);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+              $entityManager = $this->getDoctrine()->getManager();
+              $tempTaches = array();
+              foreach ($typeProjet->getTypeTaches() as $tache) {
+                  if (in_array($tache, $tempTaches)) {
+                    $typeProjet->removeTypeTache($tache);
+                  } else {
+                    array_push($tempTaches, $tache);
+                    $entityManager->persist($tache);
+                  }
+              }
+
+              $typeProjet->setSlug($slugger->genererSlug($typeProjet->getName()));
+
+              if (count($typeProjet->getTypeTaches()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
+                $entityManager->persist($typeProjet);
+                $entityManager->flush();
+              }
+              return $this->redirectToRoute('parametresTypes');
+        }
+
         return $this->render('parametres/types/nouveauType.html.twig', [
-            'controller_name' => 'ParametresController',
+            'form' => $form->createView(),
         ]);
     }
 

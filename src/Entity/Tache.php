@@ -33,9 +33,15 @@ class Tache
      */
     private $tacheProjets;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TypeTache", mappedBy="tache")
+     */
+    private $tacheTypes;
+
     public function __construct()
     {
         $this->tacheProjets = new ArrayCollection();
+        $this->tacheTypes = new ArrayCollection();
     }
 
     public function getId()
@@ -90,6 +96,37 @@ class Tache
             // set the owning side to null (unless already changed)
             if ($tacheProjet->getTache() === $this) {
                 $tacheProjet->setTache(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TypeTache[]
+     */
+    public function getTypeTaches(): Collection
+    {
+        return $this->tacheTypes;
+    }
+
+    public function addTypeTache(TypeTache $tacheType): self
+    {
+        if (!$this->tacheTypes->contains($tacheType)) {
+            $this->tacheTypes[] = $tacheType;
+            $tacheType->setTache($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTypeTache(TypeTache $tacheType): self
+    {
+        if ($this->tacheTypes->contains($tacheType)) {
+            $this->tacheTypes->removeElement($tacheType);
+            // set the owning side to null (unless already changed)
+            if ($tacheType->getTache() === $this) {
+                $tacheType->setTache(null);
             }
         }
 

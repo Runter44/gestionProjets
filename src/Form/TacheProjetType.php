@@ -17,6 +17,10 @@ class TacheProjetType extends AbstractType
         $builder
             ->add('tache', EntityType::class, array(
               'class' => Tache::class,
+              'label' => 'Tâche',
+              'label_attr' => array(
+                'class' => 'd-none',
+              ),
               'choice_label' => function ($tache, $key, $index) {
                 return $tache->getName();
               },
@@ -24,7 +28,7 @@ class TacheProjetType extends AbstractType
                 return $tache->getCategorie()->getName();
               },
               'attr' => array(
-                'class' => 'custom-select col-sm-4',
+                'class' => 'custom-select col-sm-4 mr-3',
               ),
             ))
         ;

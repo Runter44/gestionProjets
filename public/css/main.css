@@ -23,7 +23,6 @@ body {
 
 .btnSupprimerTache {
   cursor: pointer;
-  margin-left: 40px;
 }
 
 .btnSupprimerTache:hover {
@@ -48,4 +47,8 @@ body {
 
 .texteTacheProjet {
   font-size: 18px;
+}
+
+.list-style-type-none {
+  list-style-type: none;
 }

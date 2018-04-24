@@ -63,4 +63,9 @@ class TacheProjet
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->tache->getName()." du projet ".$this->projet->getName();
+    }
 }

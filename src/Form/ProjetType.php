@@ -26,6 +26,16 @@ class ProjetType extends AbstractType
                 'placeholder' => 'Entrez le nom du projet',
               ),
             ))
+            ->add('tacheProjets', CollectionType::class, array(
+              'label' => 'Tâches du projet',
+              'label_attr' => array(
+                'class' => 'form-label d-none',
+              ),
+              'entry_type' => TacheProjetType::class,
+              'allow_add' => true,
+              'allow_delete' => true,
+              'by_reference' => false,
+            ))
         ;
     }
 

@@ -10,59 +10,22 @@
     {{ form_widget(form.name) }}
     <div class="invalid-feedback" id="invalidNomUtilise" style="font-size: 16px;">Ce nom de projet est déjà utilisé</div>
   </div>
-  <!-- <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Tâches du projet</label>
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" id="nouvelleListe" name="liste" value="new" checked>
-        <label class="form-check-label" for="nouvelleListe">Nouvelle liste de tâches</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" id="importerListe" name="liste" value="import">
-        <label class="form-check-label" for="importerListe">Importer à partir d'un type de projet</label>
-      </div>
-      <select class="custom-select mt-3" name="projetImport" id="projetImport" style="display:none;">
-        <option value="aucun" selected>Sélectionnez le type de projet à importer</option>
-        <option value="1">Projet web</option>
-        <option value="2">Projet akkalia</option>
-        <option value="3">Un autre type</option>
-      </select>
-      <div class="invalid-feedback" id="invalidProjet" style="font-size: 16px;">Vous n'avez sélectionné aucun projet</div>
-      <button id="genererListe" class="btn btn-dark mt-3" type="button" name="button">Créer la liste de tâches</button>
-    </div>
-  </div> -->
-  <h3 id="typeDeListe" class="mt-5">Tâches du projet</h3>
-  <div id="formAjoutTache" class="form-inline">
-    <select class="custom-select" id="selectAjoutTache" name="tacheAjouter"> <!-- Le select devra être généré par le php -->
-      <option value="aucun" selected>Choisissez une tâche à ajouter...</option>
-      {% for categ in categories %}
-      <optgroup label="{{ categ.name }}">
-        {% for tache in taches %}
-        {% if tache.categorie.id == categ.id %}
-        <option value="{{ tache.name }}|{{ categ.name }}|{{ tache.id }}">{{ tache.name }}</option>
-        {% endif %}
-        {% endfor %}
-      </optgroup>
-      {% endfor %}
-    </select>
-    <button type="button" name="button" id="btnAjoutTache" class="btn btn-success ml-3"><i class="fa fa-plus"></i> Ajouter une tâche</button>
+  <h3 class="mt-5">Tâches du projet</h3>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id="invalidAucuneTache">
+    Vous n'avez ajouté aucune tâche !
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <div class="invalid-feedback" id="invalidTache" style="font-size: 16px;">Vous n'avez sélectionné aucune tâche</div>
-  <input type="hidden" name="nbTachesProjet" id="nbTachesProjet" value="0">
-  <div class="invalid-feedback" id="invalidAucuneTache" style="font-size: 16px;">Vous n'avez pas ajouté de tâche au projet !</div>
-  <div class="mt-5" id="emplacementGenererListe"></div>
+  <ul class="tacheProjets p-0" id="tachesNouveauProjet" data-prototype="{{ form_widget(form.tacheProjets.vars.prototype)|e('html_attr') }}">
+    {% for tacheProjet in form.tacheProjets %}
+      <li class="mt-3 list-style-type-none">{{form_row(tacheProjet)}}</li>
+    {% endfor %}
+  </ul>
   <input type="submit" class="btn btn-dark m-auto d-block" id="boutonCreerProjet" value="Enregistrer">
 {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-  window.onbeforeunload = function() {
-    if (!$("#emplacementGenererListe").is(":empty")) {
-      return "Les modifications que vous avez apporté ne seront pas enregistrées.";
-    } else {
-      return null;
-    }
-  }
-</script>
+<script src="{{ asset('js/nouveauProjet.js') }}"></script>
 {% endblock %}
