@@ -3,7 +3,7 @@
 {% block title %}Nouveau projet{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Créer un nouveau projet</h1>
+<h1 class="mb-5">Créer un nouveau projet <a href="{{ path('parametresProjets') }}" class="btn btn-dark">Annuler</a></h1>
 {{ form_start(form, {'attr': {'id': 'formNouveauProj'}} ) }}
   <div class="form-group row">
     {{ form_label(form.name) }}
@@ -19,7 +19,7 @@
   </div>
   <ul class="tacheProjets p-0" id="tachesNouveauProjet" data-prototype="{{ form_widget(form.tacheProjets.vars.prototype)|e('html_attr') }}">
     {% for tacheProjet in form.tacheProjets %}
-      <li class="mt-3 list-style-type-none">{{form_row(tacheProjet)}}</li>
+      <li class="mt-3 list-style-type-none">{{form_widget(tacheProjet)}}</li>
     {% endfor %}
   </ul>
   <input type="submit" class="btn btn-dark m-auto d-block" id="boutonCreerProjet" value="Enregistrer">

@@ -1,7 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le type de projet {{ type }}{% endblock %}
+{% block title %}Modifier le type de projet {{ typeProjet.nom }}{% endblock %}
 
 {% block body %}
-<h1>Modifier le type de projet {{ type }}</h1>
+<h1 class="mb-5">Modifier le type de projet {{ typeProjet.nom }} <a href="{{ path('parametresTypes') }}" class="btn btn-dark">Annuler</a></h1>
+{{ form_start(form, {'attr': {'id': 'formModifierTypeProj'}} ) }}
+  <div class="form-group row">
+    {{ form_label(form.nom) }}
+    {{ form_widget(form.nom) }}
+    <div class="invalid-feedback" id="invalidNomTypeUtilise" style="font-size: 16px;">Ce nom de type de projet est déjà utilisé</div>
+  </div>
+  <h3 class="mt-5">Tâches du type de projet</h3>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id="invalidAucuneTache">
+    Vous n'avez ajouté aucune tâche !
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <ul class="typeTaches p-0" id="tachesModifierTypeProjet" data-prototype="{{ form_widget(form.typeTaches.vars.prototype)|e('html_attr') }}">
+    {% for typeTache in form.typeTaches %}
+      <li class="mt-3 list-style-type-none">{{form_widget(typeTache)}}</li>
+    {% endfor %}
+  </ul>
+  <input type="submit" class="btn btn-dark m-auto d-block" id="boutonModifierTypeProjet" value="Enregistrer">
+{{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var twigNomProjet = '{{ typeProjet.nom }}';
+        var twigNombreTaches = '{{ typeProjet.typeTaches|length }}';
+    </script>
+    <script src="{{ asset('js/modifierType.js') }}"></script>
 {% endblock %}

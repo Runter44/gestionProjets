@@ -5,8 +5,17 @@
 {% block body %}
 <h1>Projets</h1>
 <h4 class="mt-4">Nouveau projet</h4>
-<a class="btn btn-success mb-4 mt-2" href="{{ path('nouveauProjet') }}"><i class="fa fa-plus"></i> Projet vierge</a>
-<a class="btn btn-success mb-4 mt-2 ml-2" href="{{ path('nouveauProjet') }}"><i class="fa fa-plus"></i> &Agrave; partir d'un type</a>
+<form class="form-inline mb-4 mt-2">
+  <select class="form-control" id="selectTypeNouveauProjet">
+    <option value="rien" selected>Projet vierge</option>
+    <optgroup label="&Agrave; partir d'un type de projet">
+      {% for type in typesProjet %}
+        <option value="{{ type.slug }}">{{ type.nom }}</option>
+      {% endfor %}
+    </optgroup>
+  </select>
+  <a class="btn btn-success ml-3" id="btnCreerProjet" href="#"><i class="fa fa-plus"></i> Créer</a>
+</form>
 <h4 class="mt-4">Projets existants</h4>
 <table class="table table-striped">
   <thead>
@@ -63,5 +72,15 @@
       document.location = '/parametres/projets/supprimer/'+id+'/';
     }
   }
+  $("#btnCreerProjet").click(function(e) {
+      e.preventDefault();
+      if ($("#selectTypeNouveauProjet").val() === "rien") {
+          document.location = "{{ path('nouveauProjet') }}";
+      } else {
+          var url = '{{ path('nouveauProjetImport', {'type': 'url_a_remplacer'}) }}'
+          url = url.replace("url_a_remplacer", $("#selectTypeNouveauProjet").val());
+          document.location = url;
+      }
+  });
 </script>
 {% endblock %}

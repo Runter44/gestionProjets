@@ -7,8 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ProjetTypeRepository")
- * @ORM\Table(name="projet_type")
+ * @ORM\Entity(repositoryClass="App\Repository\TypeProjetRepository")
  */
 class TypeProjet
 {
@@ -22,21 +21,21 @@ class TypeProjet
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TypeTache", mappedBy="projet")
-     */
-    private $typeTaches;
+    private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TypeTache", mappedBy="typeProjet")
+     */
+    private $typeTaches;
+
     public function __construct()
     {
-        $this->tacheTypes = new ArrayCollection();
+        $this->typeTaches = new ArrayCollection();
     }
 
     public function getId()
@@ -44,45 +43,14 @@ class TypeProjet
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): self
+    public function setNom(string $nom): self
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|TypeTache[]
-     */
-    public function getTypeTaches(): Collection
-    {
-        return $this->tacheTypes;
-    }
-
-    public function addTypeTache(TypeTache $tacheType): self
-    {
-        if (!$this->tacheTypes->contains($tacheType)) {
-            $this->tacheTypes[] = $tacheType;
-            $tacheType->setProjet($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTypeTache(TypeTache $tacheType): self
-    {
-        if ($this->tacheTypes->contains($tacheType)) {
-            $this->tacheTypes->removeElement($tacheType);
-            // set the owning side to null (unless already changed)
-            if ($tacheType->getProjet() === $this) {
-                $tacheType->setProjet(null);
-            }
-        }
+        $this->nom = $nom;
 
         return $this;
     }
@@ -95,6 +63,37 @@ class TypeProjet
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TypeTache[]
+     */
+    public function getTypeTaches(): Collection
+    {
+        return $this->typeTaches;
+    }
+
+    public function addTypeTach(TypeTache $typeTach): self
+    {
+        if (!$this->typeTaches->contains($typeTach)) {
+            $this->typeTaches[] = $typeTach;
+            $typeTach->setTypeProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTypeTach(TypeTache $typeTach): self
+    {
+        if ($this->typeTaches->contains($typeTach)) {
+            $this->typeTaches->removeElement($typeTach);
+            // set the owning side to null (unless already changed)
+            if ($typeTach->getTypeProjet() === $this) {
+                $typeTach->setTypeProjet(null);
+            }
+        }
 
         return $this;
     }

@@ -5,15 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TacheTypeRepository")
- * @ORM\Table(name="tache_type")
+ * @ORM\Entity(repositoryClass="App\Repository\TypeTacheRepository")
  */
 class TypeTache
 {
-
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="App\Entity\Tache", inversedBy="tacheTypes")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tache", inversedBy="typeTaches")
      * @ORM\JoinColumn(nullable=false)
      */
     private $tache;
@@ -23,7 +21,7 @@ class TypeTache
      * @ORM\ManyToOne(targetEntity="App\Entity\TypeProjet", inversedBy="typeTaches")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $projet;
+    private $typeProjet;
 
     public function getTache(): ?Tache
     {
@@ -39,12 +37,12 @@ class TypeTache
 
     public function getTypeProjet(): ?TypeProjet
     {
-        return $this->projet;
+        return $this->typeProjet;
     }
 
-    public function setTypeProjet(?TypeProjet $projet): self
+    public function setTypeProjet(?TypeProjet $typeProjet): self
     {
-        $this->projet = $projet;
+        $this->typeProjet = $typeProjet;
 
         return $this;
     }

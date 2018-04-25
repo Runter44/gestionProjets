@@ -7,12 +7,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method TacheType|null find($id, $lockMode = null, $lockVersion = null)
- * @method TacheType|null findOneBy(array $criteria, array $orderBy = null)
- * @method TacheType[]    findAll()
- * @method TacheType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TypeTache|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TypeTache|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TypeTache[]    findAll()
+ * @method TypeTache[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TacheTypeRepository extends ServiceEntityRepository
+class TypeTacheRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
@@ -20,7 +20,7 @@ class TacheTypeRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return TacheType[] Returns an array of TacheType objects
+//     * @return TypeTache[] Returns an array of TypeTache objects
 //     */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TacheTypeRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?TacheType
+    public function findOneBySomeField($value): ?TypeTache
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

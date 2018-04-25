@@ -15,7 +15,7 @@ class TypeProjetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('name', TextType::class, array(
+        ->add('nom', TextType::class, array(
           'label' => 'Nom du type de projet',
           'label_attr' => array(
             'class' => 'col-sm-2 col-form-label',
@@ -26,7 +26,7 @@ class TypeProjetType extends AbstractType
             'placeholder' => 'Entrez le nom du type de projet',
           ),
         ))
-        ->add('tacheTypes', CollectionType::class, array(
+        ->add('typeTaches', CollectionType::class, array(
           'label' => 'Tâches du type de projet',
           'label_attr' => array(
             'class' => 'form-label d-none',

@@ -1,5 +1,5 @@
 window.onbeforeunload = function() {
-  if ($("#tachesNouveauTypeProjet li").length > 0) {
+  if ($("#tachesModifierTypeProjet li").length != parseInt(twigNombreTaches)) {
     return "Les modifications que vous avez apporté ne seront pas enregistrées.";
   } else {
     return null;
@@ -15,14 +15,17 @@ $(document).ready(function() {
       e.preventDefault();
       addTacheForm(collectionHolder, ajouterTache);
   });
+  $("#tachesModifierTypeProjet li").each(function() {
+      ajouterLienDelete($(this));
+  })
   $("#invalidAucuneTache").hide();
-  $("#formNouveauTypeProj").submit(function(event) {
+  $("#formModifierTypeProj").submit(function(event) {
     window.onbeforeunload = null;
     event.preventDefault();
 
     var doublons = false;
     var vals = [];
-    $("#tachesNouveauTypeProjet li div div select").each(function(element) {
+    $("#tachesModifierTypeProjet li div div select").each(function(element) {
         if (vals.indexOf($(this).val()) !== -1) {
             doublons = true;
             $(this).addClass("is-invalid");
@@ -37,21 +40,20 @@ $(document).ready(function() {
         alert("Vous avez sélectionné plusieurs fois la même tâche !");
         return;
     }
-    console.log($("#type_projet_nom").val());
-    if ($("#type_projet_nom").val() === "" ||  $("#tachesNouveauTypeProjet li").length === 0) {
+
+    if ($("#type_projet_nom").val() === "" ||  $("#tachesModifierTypeProjet li").length === 0) {
       $("#invalidAucuneTache").show();
     } else {
       $.ajax({
         context: this,
-        url: '/ajax/nom-type-existe/',
+        url: '/ajax/nom-projet-existe/',
         type: "POST",
         data: {
-          "nomTypeProjet": $("#type_projet_nom").val()
+          "nomProjet": $("#type_projet_nom").val()
         },
         success: function(data) {
-          if (data !== "") {
-            console.log(data);
-            $("#invalidNomTypeUtilise").show();
+          if (data !== "" && data !== twigNomProjet) {
+            $("#invalidNomUtilise").show();
             $("#type_projet_nom").addClass("is-invalid");
           } else {
             this.submit();
@@ -62,7 +64,7 @@ $(document).ready(function() {
   });
 
   $("#type_projet_nom").change(function() {
-    $("#invalidNomTypeUtilise").hide();
+    $("#invalidNomUtilise").hide();
     $("#type_projet_nom").removeClass("is-invalid");
   });
 });

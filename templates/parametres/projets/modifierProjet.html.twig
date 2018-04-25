@@ -3,7 +3,7 @@
 {% block title %}Modifier le projet {{ projet.name }}{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Modifier le projet {{ projet.name }}</h1>
+<h1 class="mb-5">Modifier le projet {{ projet.name }} <a href="{{ path('parametresProjets') }}" class="btn btn-dark">Annuler</a></h1>
 {{ form_start(form, {'attr': {'id': 'formModifierProj'}} ) }}
   <div class="form-group row">
     {{ form_label(form.name) }}

@@ -1,6 +1,4 @@
 $(document).ready(function() {
-
-
     // ACCUEIL
 
     // Si aucun projet n'est sélectionné dans l'écran d'accueil

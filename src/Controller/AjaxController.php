@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Projet;
+use App\Entity\TypeProjet;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,24 @@ class AjaxController extends Controller
           );
           if ($projet !== null) {
             return new Response($projet->getName());
+          } else {
+            return new Response("");
+          }
+        }
+        return $this->redirectToRoute('accueil');
+    }
+
+    /**
+     * @Route("/ajax/nom-type-existe/", name="nomTypeExiste")
+     */
+    public function nomTypeExiste(Request $request)
+    {
+        if ($request->request->get("nomTypeProjet")) {
+          $typeProjet = $this->getDoctrine()->getRepository(TypeProjet::class)->findOneBy(
+            ['nom' => $request->request->get("nomTypeProjet")]
+          );
+          if ($typeProjet !== null) {
+            return new Response($typeProjet->getNom());
           } else {
             return new Response("");
           }
