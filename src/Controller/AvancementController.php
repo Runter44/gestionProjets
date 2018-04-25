@@ -12,22 +12,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AvancementController extends Controller
 {
     /**
-     * @Route("/avancement/{idProjet}/", name="voirAvancement")
+     * @Route("/avancement/{slug}/", name="voirAvancement")
      */
-    public function index($idProjet)
+    public function index($slug)
     {
-        $projet = $this->getDoctrine()->getRepository(Projet::class)->find($idProjet);
+        $projet = $this->getDoctrine()->getRepository(Projet::class)->findOneBy([
+          'slug' => $slug,
+        ]);
+
+        if ($projet == null) {
+            return $this->redirectToRoute('accueil');
+        }
+
         $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
-        $taches = $this->getDoctrine()->getRepository(Tache::class)->findAll();
-        $tachesProjet = $this->getDoctrine()->getRepository(TacheProjet::class)->findBy(
-          ['idProjet' => $idProjet]
-        );
 
         return $this->render('avancement/avancement.html.twig', [
             'projet' => $projet,
             'categories' => $categories,
-            'taches' => $taches,
-            'tachesProjet' => $tachesProjet,
         ]);
     }
 }

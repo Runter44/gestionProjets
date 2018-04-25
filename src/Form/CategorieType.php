@@ -21,12 +21,6 @@ class CategorieType extends AbstractType
                 'maxlength' => '100',
               ),
             ))
-            ->add('submit', SubmitType::class, array(
-              'label' => 'Ajouter',
-              'attr' => array(
-                'class' => 'btn btn-success col-sm-2 px-2',
-              ),
-            ))
         ;
     }
 

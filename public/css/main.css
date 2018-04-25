@@ -37,18 +37,28 @@ body {
   color: #dc3545;
 }
 
-.checkboxCouleur {
-  background-color: #dc3545;
-}
-
-.checkboxCouleur:checked {
-
-}
-
 .texteTacheProjet {
   font-size: 18px;
 }
 
 .list-style-type-none {
   list-style-type: none;
+}
+
+.modifierCategorie {
+  cursor: pointer;
+}
+
+.modifierCategorie:hover {
+  color: #28a745;
+}
+
+.checkAvancement:checked {
+  background-color: #dc3545;
+  color: #dc3545;
+}
+
+.checkAvancement:checked {
+  background-color: #28a745;
+  color: #28a745;
 }

@@ -32,12 +32,6 @@ class TacheType extends AbstractType
                 'class' => 'custom-select col-sm-4',
               ),
             ))
-            ->add('submit', SubmitType::class, array(
-              'label' => 'Ajouter',
-              'attr' => array(
-                'class' => 'btn btn-success ml-3 px-2 col-sm-2',
-              ),
-            ))
         ;
     }
 

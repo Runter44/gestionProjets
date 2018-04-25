@@ -11,7 +11,7 @@
     <select class="custom-select mr-2" name="projet" required id="projetVoir">
       <option selected value="aucun">Sélectionnez un projet...</option>
       {% for proj in projets %}
-        <option value="{{ proj.id }}">{{ proj.name }}</option>
+        <option value="{{ proj.slug }}">{{ proj.name }}</option>
       {% endfor %}
     </select>
     <input type="submit" name="voirAvancement" id="formVoirAvancement" class="btn btn-outline-dark" value="Valider">

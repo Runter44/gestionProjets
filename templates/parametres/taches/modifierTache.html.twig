@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la tâche {{ tache.name }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier la tâche {{ tache.name }}</h1>
+    {{form_start(form, {'attr': {'class': 'form-inline pt-5'}})}}
+        {{form_widget(form.name)}}
+        {{form_widget(form.categorie)}}
+        <input type="submit" class="btn btn-success ml-3" value="Enregistrer">
+    {{form_end(form)}}
+{% endblock %}

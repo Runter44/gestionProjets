@@ -1,35 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des tâches et catégories{% endblock %}
+{% block title %}Gestion des tâches{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Tâches et catégories</h1>
+<h1 class="mb-5">Tâches</h1>
 <div class="row">
-  <div class="col">
-    <h2>Ajouter ou supprimer des catégories</h2>
-    {{ form_start(formCategorie, {'attr': {'class': 'form-inline mb-5'}} ) }}
-      {{ form_widget(formCategorie.name) }}
-      {{ form_widget(formCategorie.submit) }}
-    {{ form_end(formCategorie) }}
-    <ul class="list-group">
-      {% for categ in categories %}
-      <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprCateg({{ categ.id }}, '{{ categ.name }}')"></i> {{ categ.name }}</li>
-      {% endfor %}
-    </ul>
-  </div>
   <div class="col">
     <h2>Ajouter ou supprimer des tâches</h2>
     {{ form_start(formTache, {'attr': {'class': 'form-inline mb-5'}} ) }}
       {{ form_widget(formTache.name) }}
       {{ form_widget(formTache.categorie) }}
-      {{ form_widget(formTache.submit) }}
+      <input type="submit" class="btn btn-success ml-3 px-2 col-sm-2" value="Ajouter">
     {{ form_end(formTache) }}
     {% for categ in categories %}
         <h4>{{ categ.name }}</h4>
         <ul class="list-group mb-4">
           {% for tache in taches %}
             {% if tache.categorie.id == categ.id %}
-            <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }}, '{{ tache.name }}')"></i> {{ tache.name }}</li>
+            <li class="list-group-item"><i class="fa fa-trash-alt iconeSupprimer mr-3" onclick="confirmSupprTache({{ tache.id }}, '{{ tache.name }}')"></i> {{ tache.name }} <i class="fas fa-pencil-alt modifierCategorie ml-2" onclick="document.location='{{ path('modifierTache', {'id': tache.id}) }}'"></i></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -40,11 +28,6 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-function confirmSupprCateg(id, nom) {
-  if (confirm("Êtes-vous sûr de vouloir supprimer la catégorie " + nom + " ? Les tâches rattachées à celle-ci seront supprimées aussi.")) {
-    document.location = '/parametres/taches/supprimer-categorie/'+id+'/';
-  }
-}
 
 function confirmSupprTache(id, nom) {
   if (confirm("Êtes-vous sûr de vouloir supprimer la tâche " + nom + " ?")) {
