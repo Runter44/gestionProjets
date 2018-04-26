@@ -29,7 +29,7 @@ class ParametresController extends Controller
      */
     public function projets()
     {
-        $projets = $this->getDoctrine()->getRepository(Projet::class)->findAll();
+        $projets = $this->getDoctrine()->getRepository(Projet::class)->findAllOrderedByDate();
         $tachesProjets = $this->getDoctrine()->getRepository(TacheProjet::class)->findAll();
         $typesProjet = $this->getDoctrine()->getRepository(TypeProjet::class)->findAll();
 
@@ -55,6 +55,14 @@ class ParametresController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
               $entityManager = $this->getDoctrine()->getManager();
+              // @todo : vérifier si le nom est déjà pris et addFlash
+              $projetTest = $this->getDoctrine()->getRepository(Projet::class)->findOneBy(["name" => $projet->getName()]);
+
+              if ($projetTest != null) {
+                $this->addFlash('error', 'Ce nom de projet est déjà pris !');
+                return $this->redirectToRoute('nouveauProjet');
+              }
+
               $tempTaches = array();
               foreach ($projet->getTacheProjets() as $tache) {
                   $tache->setTermine(false);
@@ -67,12 +75,17 @@ class ParametresController extends Controller
               }
 
               $projet->setSlug($slugger->genererSlug($projet->getName()));
+              $dateModif = new \DateTime();
+              $dateModif->setTimezone(new \DateTimeZone("Europe/Paris"));
+              $projet->setDateModif($dateModif);
 
               if (count($projet->getTacheProjets()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
                 $entityManager->persist($projet);
                 $entityManager->flush();
+                return $this->redirectToRoute('parametresProjets');
+              } else {
+                $this->addFlash('error', 'Vous n\'avez ajouté aucune tâche !');
               }
-              return $this->redirectToRoute('parametresProjets');
         }
 
         return $this->render('parametres/projets/nouveauProjet.html.twig', [
@@ -119,6 +132,9 @@ class ParametresController extends Controller
               }
 
               $projet->setSlug($slugger->genererSlug($projet->getName()));
+              $dateModif = new \DateTime();
+              $dateModif->setTimezone(new \DateTimeZone("Europe/Paris"));
+              $projet->setDateModif($dateModif);
 
               if (count($projet->getTacheProjets()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
                 $entityManager->persist($projet);
@@ -136,7 +152,7 @@ class ParametresController extends Controller
     /**
      * @Route("/parametres/projets/modifier/{slug}/", name="modifierProjet")
      */
-    public function modifierProjet($slug, Request $request)
+    public function modifierProjet($slug, Request $request, Slugger $slugger)
     {
         $projet = $this->getDoctrine()->getRepository(Projet::class)->findOneBy([
           'slug' => $slug,
@@ -179,6 +195,8 @@ class ParametresController extends Controller
                     }
                 }
             }
+
+            $projet->setSlug($slugger->genererSlug($projet->getName()));
 
             if (count($projet->getTacheProjets()) > 0) { // on enregistre uniquement si il y a des tâches ajoutées
               $entityManager->persist($projet);
@@ -367,9 +385,15 @@ class ParametresController extends Controller
         $formTache->handleRequest($request);
 
         if ($formTache->isSubmitted() && $formTache->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tache);
-            $entityManager->flush();
+            $tacheTest = $this->getDoctrine()->getRepository(Tache::class)->findOneBy(["name" => $tache->getName()]);
+
+            if ($tacheTest == null) {
+              $entityManager = $this->getDoctrine()->getManager();
+              $entityManager->persist($tache);
+              $entityManager->flush();
+            } else {
+              $this->addFlash('error', 'Cette tâche existe déjà !');
+            }
 
             return $this->redirectToRoute('parametresTaches');
         }
@@ -392,9 +416,16 @@ class ParametresController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tache);
-            $entityManager->flush();
+            $tacheTest = $this->getDoctrine()->getRepository(Tache::class)->findOneBy(["name" => $tache->getName()]);
+
+            if ($tacheTest == null) {
+              $entityManager = $this->getDoctrine()->getManager();
+              $entityManager->persist($tache);
+              $entityManager->flush();
+            } else {
+              $this->addFlash('error', 'Cette tâche existe déjà !');
+              return $this->redirectToRoute('modifierTache', ["id" => $id]);
+            }
 
             return $this->redirectToRoute('parametresTaches');
         }
@@ -418,9 +449,15 @@ class ParametresController extends Controller
         $formCategorie->handleRequest($request);
 
         if ($formCategorie->isSubmitted() && $formCategorie->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($categorie);
-            $entityManager->flush();
+            $categorieTest = $this->getDoctrine()->getRepository(Categorie::class)->findOneBy(["name" => $formCategorie->get('name')->getData()]);
+
+            if ($categorieTest == null) {
+              $entityManager = $this->getDoctrine()->getManager();
+              $entityManager->persist($categorie);
+              $entityManager->flush();
+            } else {
+              $this->addFlash('error', 'Cette catégorie existe déjà !');
+            }
 
             return $this->redirectToRoute('parametresCategories');
         }
@@ -442,10 +479,16 @@ class ParametresController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($categorie);
-            $entityManager->flush();
+            $categories = $this->getDoctrine()->getRepository(Categorie::class)->findBy(["name" => $form->get('name')->getData()]);
 
+            if (count($categories) == 0) {
+              $entityManager = $this->getDoctrine()->getManager();
+              $entityManager->persist($categorie);
+              $entityManager->flush();
+            } else {
+              $this->addFlash('error', 'Cette catégorie existe déjà !');
+              return $this->redirectToRoute('modifierCategorie', ['id' => $id]);
+            }
             return $this->redirectToRoute('parametresCategories');
         }
 

@@ -42,25 +42,10 @@ $(document).ready(function() {
     }
 
     if ($("#projet_name").val() === "" ||  $("#tachesModifierProjet li").length === 0) {
-      $("#invalidAucuneTache").show();
-    } else {
-      $.ajax({
-        context: this,
-        url: '/ajax/nom-projet-existe/',
-        type: "POST",
-        data: {
-          "nomProjet": $("#projet_name").val()
-        },
-        success: function(data) {
-          if (data !== "" && data !== twigNomProjet) {
-            $("#invalidNomUtilise").show();
-            $("#projet_name").addClass("is-invalid");
-          } else {
-            this.submit();
-          }
-        }
-      });
+        $("#invalidAucuneTache").show();
+        return;
     }
+    this.submit();
   });
 
   $("#projet_name").change(function() {

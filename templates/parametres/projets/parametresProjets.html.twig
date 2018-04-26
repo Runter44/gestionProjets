@@ -40,21 +40,12 @@
         {% endif %}
       {% endfor %}
     {% set avancement = ((current / total)*100)|round %}
-    {% if avancement == 100 %}
-    {% set bg = "bg-success" %}
-    {% elseif avancement >= 66 %}
-    {% set bg = "bg-info" %}
-    {% elseif avancement >= 33 %}
-    {% set bg = "bg-warning" %}
-    {% else %}
-    {% set bg = "bg-danger" %}
-    {% endif %}
     <tr>
       <td class="align-middle">{{ i }}</td>
       <td class="align-middle">{{ projet.name }}</td>
       <td class="align-middle">
         <div class="progress" style="height: 38px">
-          <div class="progress-bar progress-bar-striped {{ bg }}" role="progressbar" style="width: {{ avancement }}%; font-size:20px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
+          <div class="progress-bar progress-bar-striped {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:20px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
         </div>
       </td>
       <td class="align-middle text-right"><a class="btn btn-info" href="{{ path('modifierProjet', {'slug':projet.slug}) }}"><i class="fas fa-pencil-alt"></i> Modifier</a> <a onclick="confirmSupprProjet({{ projet.id }}, '{{ projet.name|url_encode }}')" class="btn btn-outline-danger" href="#"><i class="far fa-trash-alt"></i> Supprimer</a></td>

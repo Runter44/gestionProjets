@@ -12,15 +12,15 @@
 {% set current = current + 1 %}
 {% endif %}
 {% endfor %}
-{% set avancementTotal = ((current / total)*100)|round %}
+{% set avancementTotal = ((current / total) * 100)|round %}
 
   <h1 class="mb-5">Avancement du projet {{ projet.name }}</h1>
 
-  <div class="progress mb-5" style="height: 38px">
-    <div class="progress-bar progress-bar-striped {% if avancementTotal == 100 %}bg-success{% elseif avancementTotal >= 66 %}bg-info{% elseif avancementTotal >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancementTotal }}%; font-size:20px;" aria-valuenow="{{ avancementTotal }}" aria-valuemin="0" aria-valuemax="100">{{ avancementTotal }}%</div>
+  <div class="progress col-sm-6 p-0 d-block m-auto" style="height: 38px">
+    <div class="progress-bar progress-bar-striped {% if avancementTotal == 100 %}bg-success{% elseif avancementTotal >= 66 %}bg-info{% elseif avancementTotal >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancementTotal }}%; font-size:20px; height: 100%;" aria-valuenow="{{ avancementTotal }}" aria-valuemin="0" aria-valuemax="100">{{ avancementTotal }}%</div>
   </div>
 
-  <form>
+  {{ form_start(form, {'attr': {'class': 'mt-5'}} ) }}
   {% for categ in categories %}
     {% set totalc = 0 %}
     {% set currentc = 0 %}
@@ -32,24 +32,27 @@
           {% endif %}
         {% endif %}
     {% endfor %}
-    {% set avancement = ((currentc / totalc)*100)|round %}
-    <ul class="list-group list-group-flush mb-5 ulVoirAvancement">
-      <h4 style="display: inline-block;">{{ categ.name }}
-      <div class="progress" style="height: 20px;width: 200px;display:inline-block;">
-        <div class="progress-bar progress-bar-striped {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:18px;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
-      </div></h4>
-        {% for tacheProj in projet.tacheProjets %}
-          {% if tacheProj.tache.categorie.id == categ.id %}
-            <li class="list-group-item">
-              <div class="form-check">
-                <input type="checkbox" {% if tacheProj.termine == 1 %}checked{% endif %} class="form-check-input checkAvancement" id="tache{{ tacheProj.tache.id }}">
-                <label class="form-check-label labelAvancement" for="tache{{ tacheProj.tache.id }}">{{ tacheProj.tache.name }}</label>
-              </div>
-            </li>
-          {% endif %}
-        {% endfor %}
-    </ul>
+    {% if totalc > 0 %}
+        {% set avancement = ((currentc / totalc) * 100)|round %}
+        <ul class="list-group list-group-flush mb-5 ulVoirAvancement">
+          <h4 style="display: inline-block;">{{ categ.name }}
+          <div class="progress ml-3" style="height: 22px;width: 200px;display:inline-block; margin-bottom: -2px;">
+            <div class="progress-bar progress-bar-striped align-middle {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:18px; height: 100%;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
+          </div></h4>
+            {% for tacheProj in projet.tacheProjets %}
+              {% if tacheProj.tache.categorie.id == categ.id %}
+                <li class="list-group-item">
+                  <div class="form-check">
+                    <input type="checkbox" {% if tacheProj.termine == 1 %}checked{% endif %} class="form-check-input checkAvancement" id="tache{{ tacheProj.tache.id }}" name="tache{{ tacheProj.tache.id }}">
+                    <label class="form-check-label labelAvancement" for="tache{{ tacheProj.tache.id }}">{{ tacheProj.tache.name }}</label>
+                    <label class="checkmark" for="tache{{ tacheProj.tache.id }}"></label>
+                  </div>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+    {% endif %}
   {% endfor %}
   <input type="submit" class="btn btn-dark d-block m-auto" value="Sauvegarder l'avancement">
-</form>
+{{ form_end(form) }}
 {% endblock %}

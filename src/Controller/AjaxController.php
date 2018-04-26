@@ -30,6 +30,24 @@ class AjaxController extends Controller
     }
 
     /**
+     * @Route("/ajax/nom-categorie-existe/", name="nomCategorieExiste")
+     */
+    public function nomCategorieExiste(Request $request)
+    {
+        if ($request->request->get("nomCategorie")) {
+          $categorie = $this->getDoctrine()->getRepository(Categorie::class)->findOneBy(
+            ['name' => $request->request->get("nomCategorie")]
+          );
+          if ($categorie !== null) {
+            return new Response($categorie->getName());
+          } else {
+            return new Response("");
+          }
+        }
+        return $this->redirectToRoute('accueil');
+    }
+
+    /**
      * @Route("/ajax/nom-type-existe/", name="nomTypeExiste")
      */
     public function nomTypeExiste(Request $request)

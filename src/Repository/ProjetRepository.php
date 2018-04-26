@@ -19,6 +19,19 @@ class ProjetRepository extends ServiceEntityRepository
         parent::__construct($registry, Projet::class);
     }
 
+    /**
+     * @return Projet[] Returns an array of Projet objects ordered by the most recent date
+     */
+    public function findAllOrderedByDate()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+              'SELECT p FROM App:Projet p ORDER BY p.dateModif DESC'
+            )
+            ->getResult()
+        ;
+    }
+
     /*
     public function findBySomething($value)
     {

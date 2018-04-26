@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Gaegu|Lato');
-
 body {
   font-family: 'Lato', sans-serif;
 }
@@ -53,12 +52,94 @@ body {
   color: #28a745;
 }
 
-.checkAvancement:checked {
-  background-color: #dc3545;
-  color: #dc3545;
+.checkAvancement~.labelAvancement {
+  /*background-color: #dc3545;*/
+  color: #007bff;
 }
 
-.checkAvancement:checked {
-  background-color: #28a745;
+.checkAvancement:checked~.labelAvancement {
+  /*background-color: #28a745;*/
   color: #28a745;
+}
+
+/* Pimp my checkbox */
+
+/* Hide the browser's default checkbox */
+
+.form-check {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.form-check input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.labelAvancement {
+  color: #28a745;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  background-color: #007bff50;
+  border-radius: 2px;
+}
+
+/* On mouse-over, add a green background color */
+
+.form-check input:hover~.checkmark {
+  background-color: #28a74550;
+  cursor: pointer;
+}
+
+/* When the checkbox is checked, add a green background */
+
+.form-check input:checked~.checkmark {
+  background-color: #28a745;
+}
+
+.form-check input:checked~.labelAvancement {
+  color: #28a745;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+
+.form-check input:checked~.checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

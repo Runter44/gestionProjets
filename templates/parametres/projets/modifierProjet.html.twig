@@ -28,7 +28,7 @@
 
 {% block javascripts %}
     <script type="text/javascript">
-        var twigNomProjet = '{{ projet.name }}';
+        var twigNomProjet = '{{ projet.name|url_encode }}';
         var twigNombreTaches = '{{ projet.tacheProjets|length }}';
     </script>
     <script src="{{ asset('js/modifierProjet.js') }}"></script>

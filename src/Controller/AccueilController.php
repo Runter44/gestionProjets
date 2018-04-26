@@ -13,7 +13,7 @@ class AccueilController extends Controller
      */
     public function index()
     {
-        $allProjets = $this->getDoctrine()->getRepository(Projet::class)->findAll();
+        $allProjets = $this->getDoctrine()->getRepository(Projet::class)->findAllOrderedByDate();
 
         return $this->render('accueil/accueil.html.twig', [
             'projets' => $allProjets,
