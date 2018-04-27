@@ -3,13 +3,13 @@
 {% block title %}Gestion des catégories{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Catégories</h1>
+<h1 class="mb-3 mb-sm-5">Catégories</h1>
 <div class="row">
   <div class="col">
-    <h2>Ajouter ou supprimer des catégories</h2>
-    {{ form_start(formCategorie, {'attr': {'class': 'form-inline mb-5'}} ) }}
+    <h2 class="mb-2 mb-sm-0">Ajouter ou supprimer des catégories</h2>
+    {{ form_start(formCategorie, {'attr': {'class': 'form-inline mb-3 mb-sm-5'}} ) }}
       {{ form_widget(formCategorie.name) }}
-      <input type="submit" class="btn btn-success col-sm-2 px-2" value="Ajouter">
+      <input type="submit" class="btn btn-success col-sm-2 px-2 mt-2 mt-sm-0" value="Ajouter">
     {{ form_end(formCategorie) }}
     <ul class="list-group">
       {% for categ in categories %}

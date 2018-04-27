@@ -17,11 +17,8 @@ class ProjetType extends AbstractType
         $builder
             ->add('name', TextType::class, array(
               'label' => 'Nom du projet',
-              'label_attr' => array(
-                'class' => 'col-sm-2 col-form-label',
-              ),
               'attr' => array(
-                'class' => 'col-sm-10 form-control',
+                'class' => 'form-control',
                 'maxlength' => '100',
                 'placeholder' => 'Entrez le nom du projet',
               ),

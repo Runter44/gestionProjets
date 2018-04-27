@@ -44,8 +44,26 @@ $(document).ready(function() {
     if ($("#projet_name").val() === "" ||  $("#tachesModifierProjet li").length === 0) {
         $("#invalidAucuneTache").show();
         return;
+    } else {
+      $.ajax({
+        context: this,
+        url: '/ajax/nom-projet-existe/',
+        type: "POST",
+        data: {
+          "nomProjet": $("#projet_name").val()
+        },
+        success: function(data) {
+          console.log(data);
+          console.log(twigNomProjet);
+          if (data !== "" && data !== decodeURIComponent(twigNomProjet)) {
+            $("#invalidNomUtilise").show();
+            $("#projet_name").addClass("is-invalid");
+          } else {
+            this.submit();
+          }
+        }
+      });
     }
-    this.submit();
   });
 
   $("#projet_name").change(function() {

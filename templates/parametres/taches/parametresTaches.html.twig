@@ -3,14 +3,14 @@
 {% block title %}Gestion des tâches{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Tâches</h1>
+<h1 class="mb-3 mb-sm-5">Tâches</h1>
 <div class="row">
   <div class="col">
-    <h2>Ajouter ou supprimer des tâches</h2>
-    {{ form_start(formTache, {'attr': {'class': 'form-inline mb-5'}} ) }}
+    <h2 class="mb-2 mb-sm-0">Ajouter ou supprimer des tâches</h2>
+    {{ form_start(formTache, {'attr': {'class': 'form-inline mb-4 mb-sm-5'}} ) }}
       {{ form_widget(formTache.name) }}
       {{ form_widget(formTache.categorie) }}
-      <input type="submit" class="btn btn-success ml-3 px-2 col-sm-2" value="Ajouter">
+      <input type="submit" class="btn btn-success ml-sm-3 px-2 col-sm-2" value="Ajouter">
     {{ form_end(formTache) }}
     {% for categ in categories %}
         <h4>{{ categ.name }}</h4>

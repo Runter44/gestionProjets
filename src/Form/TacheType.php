@@ -18,7 +18,7 @@ class TacheType extends AbstractType
         $builder
             ->add('name', TextType::class, array(
               'attr' => array(
-                'class' => 'form-control col-sm-5 mr-3',
+                'class' => 'form-control col-12 col-sm-5 mr-3 mb-2 mb-sm-0',
                 'placeholder' => 'Nom de la tâche',
                 'maxlength' => '100',
               ),
@@ -29,7 +29,7 @@ class TacheType extends AbstractType
                 return $category->getName();
               },
               'attr' => array(
-                'class' => 'custom-select col-sm-4',
+                'class' => 'custom-select col-12 col-sm-4 mb-2 mb-sm-0',
               ),
             ))
         ;

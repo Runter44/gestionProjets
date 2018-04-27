@@ -16,7 +16,7 @@ class CategorieType extends AbstractType
         $builder
             ->add('name', TextType::class, array(
               'attr' => array(
-                'class' => 'form-control col-sm-9 mr-3',
+                'class' => 'form-control col-12 col-sm-9 mr-3 mb-2 mb-sm-0',
                 'placeholder' => 'Nom de la catégorie',
                 'maxlength' => '100',
               ),

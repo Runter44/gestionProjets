@@ -4,7 +4,7 @@ $(document).ready(function() {
     // Si aucun projet n'est sélectionné dans l'écran d'accueil
     $("#formVoirAvancement").click(function(event) {
         if ($("#projetVoir").val() === "aucun") {
-            $(".invalid-feedback").show();
+            $(".invalid-feedback").addClass('d-sm-block');
             $("#projetVoir").addClass("is-invalid");
         } else {
             document.location = "/avancement/"+$("#projetVoir").val();
@@ -12,7 +12,7 @@ $(document).ready(function() {
     });
 
     $("#projetVoir").change(function() {
-        $(".invalid-feedback").hide();
+        $(".invalid-feedback").removeClass('d-sm-block');
         $("#projetVoir").removeClass("is-invalid");
     });
 

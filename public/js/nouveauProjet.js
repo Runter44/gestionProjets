@@ -39,10 +39,25 @@ $(document).ready(function() {
     }
 
     if ($("#projet_name").val() === "" ||  $("#tachesNouveauProjet li").length === 0) {
-        $("#invalidAucuneTache").show();
-        return;
+      $("#invalidAucuneTache").show();
+    } else {
+      $.ajax({
+        context: this,
+        url: '/ajax/nom-projet-existe/',
+        type: "POST",
+        data: {
+          "nomProjet": $("#projet_name").val()
+        },
+        success: function(data) {
+          if (data !== "") {
+            $("#invalidNomUtilise").show();
+            $("#projet_name").addClass("is-invalid");
+          } else {
+            this.submit();
+          }
+        }
+      });
     }
-    this.submit();
   });
 
   $("#projet_name").change(function() {

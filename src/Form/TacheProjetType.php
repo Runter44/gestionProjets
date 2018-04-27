@@ -28,7 +28,7 @@ class TacheProjetType extends AbstractType
                 return $tache->getCategorie()->getName();
               },
               'attr' => array(
-                'class' => 'custom-select col-sm-4 mr-3',
+                'class' => 'custom-select col-10 col-sm-4 mr-3',
               ),
             ))
         ;

@@ -3,14 +3,14 @@
 {% block title %}Modifier le type de projet {{ typeProjet.nom }}{% endblock %}
 
 {% block body %}
-<h1 class="mb-5">Modifier le type de projet {{ typeProjet.nom }} <a href="{{ path('parametresTypes') }}" class="btn btn-dark">Annuler</a></h1>
+<h1 class="mb-3 mb-sm-5">Modifier le type de projet {{ typeProjet.nom }} <a href="{{ path('parametresTypes') }}" class="btn btn-dark d-none d-sm-inline-block">Annuler</a></h1>
 {{ form_start(form, {'attr': {'id': 'formModifierTypeProj'}} ) }}
-  <div class="form-group row">
+  <div class="form-group">
     {{ form_label(form.nom) }}
     {{ form_widget(form.nom) }}
-    <div class="invalid-feedback" id="invalidNomTypeUtilise" style="font-size: 16px;">Ce nom de type de projet est déjà utilisé</div>
   </div>
-  <h3 class="mt-5">Tâches du type de projet</h3>
+  <div class="invalid-feedback p-sm-0 mt-0" id="invalidNomTypeUtilise">Ce nom de type de projet est déjà utilisé</div>
+  <h3 class="mt-3 mt-sm-5 mb-0">Tâches du type de projet</h3>
   <div class="alert alert-danger alert-dismissible fade show" role="alert" id="invalidAucuneTache">
     Vous n'avez ajouté aucune tâche !
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -22,7 +22,7 @@
       <li class="mt-3 list-style-type-none">{{form_widget(typeTache)}}</li>
     {% endfor %}
   </ul>
-  <input type="submit" class="btn btn-dark m-auto d-block" id="boutonModifierTypeProjet" value="Enregistrer">
+  <input type="submit" class="btn btn-dark mx-auto mt-4 mt-sm-auto d-block" id="boutonModifierTypeProjet" value="Enregistrer">
 {{ form_end(form) }}
 {% endblock %}
 

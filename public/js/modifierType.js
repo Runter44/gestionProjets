@@ -46,14 +46,14 @@ $(document).ready(function() {
     } else {
       $.ajax({
         context: this,
-        url: '/ajax/nom-projet-existe/',
+        url: '/ajax/nom-type-existe/',
         type: "POST",
         data: {
-          "nomProjet": $("#type_projet_nom").val()
+          "nomTypeProjet": $("#type_projet_nom").val()
         },
         success: function(data) {
           if (data !== "" && data !== twigNomProjet) {
-            $("#invalidNomUtilise").show();
+            $("#invalidNomTypeUtilise").show();
             $("#type_projet_nom").addClass("is-invalid");
           } else {
             this.submit();

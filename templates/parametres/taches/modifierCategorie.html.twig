@@ -4,8 +4,8 @@
 
 {% block body %}
     <h1>Modifier la catégorie {{ categorie.name }}</h1>
-    {{form_start(form, {'attr': {'class': 'form-inline pt-5'}})}}
+    {{form_start(form, {'attr': {'class': 'form-inline pt-3 pt-sm-5'}})}}
         {{form_widget(form.name)}}
-        <input type="submit" class="btn btn-success ml-3" value="Enregistrer">
+        <input type="submit" class="btn btn-success ml-sm-3 col-12 col-sm-2" value="Enregistrer">
     {{form_end(form)}}
 {% endblock %}

@@ -14,13 +14,13 @@
 {% endfor %}
 {% set avancementTotal = ((current / total) * 100)|round %}
 
-  <h1 class="mb-5">Avancement du projet {{ projet.name }}</h1>
+  <h1 class="mb-3 mb-sm-3">Avancement du projet {{ projet.name }}</h1>
 
   <div class="progress col-sm-6 p-0 d-block m-auto" style="height: 38px">
     <div class="progress-bar progress-bar-striped {% if avancementTotal == 100 %}bg-success{% elseif avancementTotal >= 66 %}bg-info{% elseif avancementTotal >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancementTotal }}%; font-size:20px; height: 100%;" aria-valuenow="{{ avancementTotal }}" aria-valuemin="0" aria-valuemax="100">{{ avancementTotal }}%</div>
   </div>
 
-  {{ form_start(form, {'attr': {'class': 'mt-5'}} ) }}
+  {{ form_start(form, {'attr': {'class': 'mt-3 mt-sm-5'}} ) }}
   {% for categ in categories %}
     {% set totalc = 0 %}
     {% set currentc = 0 %}
@@ -34,9 +34,12 @@
     {% endfor %}
     {% if totalc > 0 %}
         {% set avancement = ((currentc / totalc) * 100)|round %}
-        <ul class="list-group list-group-flush mb-5 ulVoirAvancement">
-          <h4 style="display: inline-block;">{{ categ.name }}
-          <div class="progress ml-3" style="height: 22px;width: 200px;display:inline-block; margin-bottom: -2px;">
+        <ul class="list-group list-group-flush mb-3 mb-sm-5 ulVoirAvancement">
+          <h4>{{ categ.name }}
+          <div class="progress ml-3 d-sm-none mt-2" style="height: 22px;width: 90%;display:inline-block; margin-bottom: -2px;">
+            <div class="progress-bar progress-bar-striped align-middle {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:18px; height: 100%;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
+          </div>
+          <div class="progress ml-3 d-none d-sm-inline-block" style="height: 22px;width: 200px;display:inline-block; margin-bottom: -2px;">
             <div class="progress-bar progress-bar-striped align-middle {% if avancement == 100 %}bg-success{% elseif avancement >= 66 %}bg-info{% elseif avancement >= 33 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ avancement }}%; font-size:18px; height: 100%;" aria-valuenow="{{ avancement }}" aria-valuemin="0" aria-valuemax="100">{{ avancement }}%</div>
           </div></h4>
             {% for tacheProj in projet.tacheProjets %}
@@ -53,6 +56,6 @@
           </ul>
     {% endif %}
   {% endfor %}
-  <input type="submit" class="btn btn-dark d-block m-auto" value="Sauvegarder l'avancement">
+  <input type="submit" class="btn btn-dark d-block mx-auto mb-3" value="Sauvegarder l'avancement">
 {{ form_end(form) }}
 {% endblock %}

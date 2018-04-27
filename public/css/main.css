@@ -143,3 +143,25 @@ body {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+
+@media (max-width: 575.98px) {
+
+  * {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 0 !important;
+  }
+
+  h3, h4, h5, h6 {
+    font-size: 16px;
+  }
+
+}
