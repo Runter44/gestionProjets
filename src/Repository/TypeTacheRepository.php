@@ -19,9 +19,9 @@ class TypeTacheRepository extends ServiceEntityRepository
         parent::__construct($registry, TypeTache::class);
     }
 
-//    /**
-//     * @return TypeTache[] Returns an array of TypeTache objects
-//     */
+/*    /**
+     * @return TypeTache[] Returns an array of TypeTache objects
+     */
     /*
     public function findByExampleField($value)
     {

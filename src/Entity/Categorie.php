@@ -35,17 +35,17 @@ class Categorie
 
     public function getId()
     {
-      return $this->id;
+        return $this->id;
     }
 
     public function getName()
     {
-      return $this->name;
+        return $this->name;
     }
 
     public function setName($nom)
     {
-      $this->name = $nom;
+        $this->name = $nom;
     }
 
     /**

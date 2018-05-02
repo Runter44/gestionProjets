@@ -32,12 +32,12 @@ class TacheProjet
 
     public function setTermine($value)
     {
-      $this->termine = $value;
+        $this->termine = $value;
     }
 
     public function getTermine()
     {
-      return $this->termine;
+        return $this->termine;
     }
 
     public function getTache(): ?Tache

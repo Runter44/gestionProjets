@@ -1,86 +1,101 @@
+"use strict";
+
 window.onbeforeunload = function() {
-  if ($("#tachesModifierProjet li").length != parseInt(twigNombreTaches)) {
-    return "Les modifications que vous avez apporté ne seront pas enregistrées.";
-  } else {
-    return null;
-  }
-}
+    if ($("#tachesModifierProjet li").length !== parseInt(twigNombreTaches, 10)) {
+        return "Les modifications que vous avez apporté ne seront pas enregistrées.";
+    } else {
+        return null;
+    }
+};
 var collectionHolder;
 var ajouterTache = $('<a href="#" class="btn btn-success mt-3"><i class="fa fa-plus"></i> Ajouter une tâche</a>');
 $(document).ready(function() {
-  collectionHolder = $('ul.tacheProjets');
-  collectionHolder.append(ajouterTache);
-  collectionHolder.data('index', collectionHolder.find(':input').length);
-  ajouterTache.click(function(e) {
-      e.preventDefault();
-      addTacheForm(collectionHolder, ajouterTache);
-  });
-  $("#tachesModifierProjet li").each(function() {
-      ajouterLienDelete($(this));
-  })
-  $("#invalidAucuneTache").hide();
-  $("#formModifierProj").submit(function(event) {
-    window.onbeforeunload = null;
-    event.preventDefault();
+    collectionHolder = $("ul.tacheProjets");
+    collectionHolder.append(ajouterTache);
+    collectionHolder.data("index", collectionHolder.find(":input").length);
+    ajouterTache.click(function(e) {
+        e.preventDefault();
+        addTacheForm(collectionHolder, ajouterTache);
+    });
+    $("#tachesModifierProjet li").each(function() {
+        ajouterLienDelete($(this));
+    });
+    $("#invalidAucuneTache").hide();
+    $("#formModifierProj").submit(function(event) {
+        window.onbeforeunload = null;
+        event.preventDefault();
 
-    var doublons = false;
-    var vals = [];
-    $("#tachesModifierProjet li div div select").each(function(element) {
-        if (vals.indexOf($(this).val()) !== -1) {
-            doublons = true;
-            $(this).addClass("is-invalid");
-            $(this).change(function() {
-                $(this).removeClass("is-invalid");
+        var doublons = false;
+        var vals = [];
+        $("#tachesModifierProjet li div div select").each(function(element) {
+            if (vals.indexOf($(this).val()) !== -1) {
+                doublons = true;
+                $(this).addClass("is-invalid");
+                $(this).change(function() {
+                    $(this).removeClass("is-invalid");
+                });
+            }
+            vals.push($(this).val());
+        });
+
+        if (doublons) {
+            alert("Vous avez sélectionné plusieurs fois la même tâche !");
+            return;
+        }
+
+        if ($("#projet_name").val() === "" ||
+        $("#tachesModifierProjet li").length === 0
+        ) {
+            $("#invalidAucuneTache").show();
+            return;
+        } else {
+            $.ajax({
+                context: this,
+                url: "/ajax/nom-projet-existe/",
+                type: "POST",
+                data: {
+                    "nomProjet": $("#projet_name").val()
+                },
+                success: function(data) {
+                    if (data !== "" && data !== decodeURIComponent(twigNomProjet)) {
+                        $("#invalidNomUtilise").show();
+                        $("#projet_name").addClass("is-invalid");
+                    } else {
+                        this.submit();
+                    }
+                }
             });
         }
-        vals.push($(this).val());
-    })
+    });
 
-    if (doublons) {
-        alert("Vous avez sélectionné plusieurs fois la même tâche !");
-        return;
-    }
-
-    if ($("#projet_name").val() === "" ||  $("#tachesModifierProjet li").length === 0) {
-        $("#invalidAucuneTache").show();
-        return;
-    } else {
-      $.ajax({
-        context: this,
-        url: '/ajax/nom-projet-existe/',
-        type: "POST",
-        data: {
-          "nomProjet": $("#projet_name").val()
-        },
-        success: function(data) {
-          console.log(data);
-          console.log(twigNomProjet);
-          if (data !== "" && data !== decodeURIComponent(twigNomProjet)) {
-            $("#invalidNomUtilise").show();
-            $("#projet_name").addClass("is-invalid");
-          } else {
-            this.submit();
-          }
-        }
-      });
-    }
-  });
-
-  $("#projet_name").change(function() {
-    $("#invalidNomUtilise").hide();
-    $("#projet_name").removeClass("is-invalid");
-  });
+    $("#projet_name").change(function() {
+        $("#invalidNomUtilise").hide();
+        $("#projet_name").removeClass("is-invalid");
+    });
 });
+
+/**
+ * Fonction qui ajoute le select à la liste des tâches
+ * @param {HTMLElement} collectionHolder La liste ul des tâches contenant le data-prototype
+ * @param {HTMLElement} ajouterTache Le lien pour ajouter une nouvelle tâche
+ * @return {null}
+ */
 function addTacheForm(collectionHolder, ajouterTache) {
-    var prototype = collectionHolder.data('prototype');
-    var index = collectionHolder.data('index');
+    var prototype = collectionHolder.data("prototype");
+    var index = collectionHolder.data("index");
     var newForm = prototype;
     newForm = newForm.replace(/__name__/g, index);
-    collectionHolder.data('index', index + 1);
+    collectionHolder.data("index", index + 1);
     var liTache = $('<li class="mt-3 list-style-type-none"></li>').append(newForm);
     ajouterLienDelete(liTache);
     ajouterTache.before(liTache);
 }
+
+/**
+ * Fonction qui ajoute le select à la liste des tâches
+ * @param {HTMLElement} liTacheForm Le li contenant le select
+ * @return {null}
+ */
 function ajouterLienDelete(liTacheForm) {
     var bouton = $('<i class="far fa-trash-alt btnSupprimerTache"></i>');
     liTacheForm.find("div div").append(bouton);

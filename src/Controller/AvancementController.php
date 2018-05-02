@@ -11,10 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * Controleur de gestion de la page d'avancement
+ * @author Simon Jaunet <sjaunet@umanit.fr>
+ */
 class AvancementController extends Controller
 {
     /**
      * @Route("/avancement/{slug}/", name="voirAvancement")
+     * Fonction de traitement de l'avancement des projets
+     * @param string $slug Le slug/url du projet à afficher
+     * @param Request $request La requête envoyée au controleur
+     * @return Template|Redirect Retourne le template de l'avancement du projet, ou redirect vers la page d'accueil si le formulaire est envoyé
      */
     public function index($slug, Request $request)
     {
@@ -22,7 +30,7 @@ class AvancementController extends Controller
           'slug' => $slug,
         ]);
 
-        if ($projet == null) {
+        if ($projet === null) {
             return $this->redirectToRoute('accueil');
         }
 
@@ -35,7 +43,7 @@ class AvancementController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($projet->getTacheProjets() as $tache) {
-                if ($request->get("tache".$tache->getTache()->getId()) != null) {
+                if ($request->get("tache".$tache->getTache()->getId()) !== null) {
                     $tache->setTermine(true);
                 } else {
                     $tache->setTermine(false);

@@ -19,9 +19,9 @@ class TypeProjetRepository extends ServiceEntityRepository
         parent::__construct($registry, TypeProjet::class);
     }
 
-//    /**
-//     * @return TypeProjet[] Returns an array of TypeProjet objects
-//     */
+/*    /**
+     * @return TypeProjet[] Returns an array of TypeProjet objects
+     */
     /*
     public function findByExampleField($value)
     {
